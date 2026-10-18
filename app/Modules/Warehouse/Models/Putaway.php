@@ -5,6 +5,8 @@ namespace Modules\Warehouse\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
 
 class Putaway extends Model
 {
@@ -29,7 +31,7 @@ class Putaway extends Model
         parent::boot();
         static::creating(function (Putaway $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -40,7 +42,7 @@ class Putaway extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function storageLocation()
@@ -50,7 +52,7 @@ class Putaway extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function source()
@@ -58,4 +60,3 @@ class Putaway extends Model
         return $this->morphTo();
     }
 }
-

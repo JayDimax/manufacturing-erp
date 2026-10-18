@@ -23,4 +23,3 @@ class StoreCommercialInvoiceRequest extends FormRequest
         ];
     }
 }
-

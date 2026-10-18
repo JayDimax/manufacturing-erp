@@ -30,9 +30,10 @@ class BranchService
 
     public function create(array $data): Branch
     {
-        if (!isset($data['branch_code'])) {
+        if (! isset($data['branch_code'])) {
             $data['branch_code'] = $this->numberSeriesService->generateNext('BRANCH');
         }
+
         return $this->branchRepository->create($data);
     }
 
@@ -51,4 +52,3 @@ class BranchService
         return $this->branchRepository->findActive();
     }
 }
-

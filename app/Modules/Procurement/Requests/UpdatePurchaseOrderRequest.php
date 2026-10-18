@@ -14,7 +14,7 @@ class UpdatePurchaseOrderRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'purchase_order_number' => 'nullable|string|max:50|unique:purchase_orders,purchase_order_number,' . $this->route('purchase_order')?->id,
+            'purchase_order_number' => 'nullable|string|max:50|unique:purchase_orders,purchase_order_number,'.$this->route('purchase_order')?->id,
             'purchase_request_id' => 'required|exists:purchase_requests,id',
             'supplier_id' => 'required|exists:business_partners,id',
             'delivery_address' => 'nullable|string|max:1000',
@@ -26,4 +26,3 @@ class UpdatePurchaseOrderRequest extends FormRequest
         ];
     }
 }
-

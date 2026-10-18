@@ -36,4 +36,3 @@ class StorageLocationRepository extends BaseRepository
             ->get();
     }
 }
-

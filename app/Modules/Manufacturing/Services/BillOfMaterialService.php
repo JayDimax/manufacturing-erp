@@ -5,8 +5,8 @@ namespace Modules\Manufacturing\Services;
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
 use Modules\Manufacturing\Models\BillOfMaterial;
-use Modules\Manufacturing\Repositories\BillOfMaterialRepository;
 use Modules\Manufacturing\Repositories\BillOfMaterialItemRepository;
+use Modules\Manufacturing\Repositories\BillOfMaterialRepository;
 
 class BillOfMaterialService
 {
@@ -29,10 +29,10 @@ class BillOfMaterialService
 
     public function create(array $data): BillOfMaterial
     {
-        if (!isset($data['bom_number'])) {
+        if (! isset($data['bom_number'])) {
             $data['bom_number'] = $this->numberSeriesService->generateNext('BILL_OF_MATERIALS');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
         }
 
@@ -77,6 +77,7 @@ class BillOfMaterialService
     public function delete(BillOfMaterial $bom): bool
     {
         $this->auditService->logDelete('manufacturing', $bom->bom_number, $bom->toArray());
+
         return $this->bomRepository->delete($bom);
     }
 

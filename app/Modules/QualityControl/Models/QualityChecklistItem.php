@@ -25,4 +25,3 @@ class QualityChecklistItem extends Model
         return $this->belongsTo(QualityChecklist::class, 'quality_checklist_id');
     }
 }
-

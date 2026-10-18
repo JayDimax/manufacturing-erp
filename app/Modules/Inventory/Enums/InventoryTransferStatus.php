@@ -8,4 +8,3 @@ enum InventoryTransferStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
-

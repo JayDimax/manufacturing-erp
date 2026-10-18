@@ -17,4 +17,3 @@ class InventoryAdjustmentItemRepository extends BaseRepository
         return $this->model->where('inventory_adjustment_id', $adjustmentId)->get();
     }
 }
-

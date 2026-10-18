@@ -26,4 +26,3 @@ class CommercialInvoiceRepository extends BaseRepository
             ->get();
     }
 }
-

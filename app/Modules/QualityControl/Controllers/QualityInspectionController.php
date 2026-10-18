@@ -3,18 +3,18 @@
 namespace Modules\QualityControl\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\QualityControl\Models\QualityInspection;
-use Modules\QualityControl\Requests\StoreQualityInspectionRequest;
-use Modules\QualityControl\Requests\UpdateQualityInspectionRequest;
-use Modules\QualityControl\Services\QualityInspectionService;
-use Modules\QualityControl\Services\NonConformanceService;
-use Modules\QualityControl\Services\CorrectiveActionService;
-use Modules\ProductMaster\Services\ProductService;
-use Modules\QualityControl\Repositories\InspectionTypeRepository;
-use Modules\QualityControl\Repositories\QualityChecklistRepository;
-use Modules\QualityControl\Repositories\DefectTypeRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\QualityControl\Models\QualityInspection;
+use Modules\QualityControl\Repositories\DefectTypeRepository;
+use Modules\QualityControl\Repositories\InspectionTypeRepository;
+use Modules\QualityControl\Repositories\QualityChecklistRepository;
+use Modules\QualityControl\Requests\StoreQualityInspectionRequest;
+use Modules\QualityControl\Requests\UpdateQualityInspectionRequest;
+use Modules\QualityControl\Services\CorrectiveActionService;
+use Modules\QualityControl\Services\NonConformanceService;
+use Modules\QualityControl\Services\QualityInspectionService;
 
 class QualityInspectionController extends Controller
 {
@@ -31,6 +31,7 @@ class QualityInspectionController extends Controller
     public function index(): View
     {
         $inspections = $this->inspectionService->getPaginated();
+
         return view('admin.quality-control.inspection.index', compact('inspections'));
     }
 
@@ -44,12 +45,14 @@ class QualityInspectionController extends Controller
         ];
         $typeOptions = $this->inspectionTypeRepo->findActive();
         $checklists = $this->checklistRepo->findActive();
+
         return view('admin.quality-control.inspection.create', compact('products', 'inspectionTypes', 'typeOptions', 'checklists'));
     }
 
     public function store(StoreQualityInspectionRequest $request): RedirectResponse
     {
         $this->inspectionService->create($request->validated());
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Quality Inspection created successfully.');
     }
@@ -58,9 +61,10 @@ class QualityInspectionController extends Controller
     {
         $qualityInspection->load([
             'product', 'inspectionType', 'checklist', 'inspector', 'approver',
-            'items', 'nonConformances.defectType', 'correctiveActions'
+            'items', 'nonConformances.defectType', 'correctiveActions',
         ]);
         $defectTypes = $this->defectTypeRepo->findActive();
+
         return view('admin.quality-control.inspection.show', compact('qualityInspection', 'defectTypes'));
     }
 
@@ -74,12 +78,14 @@ class QualityInspectionController extends Controller
         ];
         $typeOptions = $this->inspectionTypeRepo->findActive();
         $checklists = $this->checklistRepo->findActive();
+
         return view('admin.quality-control.inspection.edit', compact('qualityInspection', 'products', 'inspectionTypes', 'typeOptions', 'checklists'));
     }
 
     public function update(UpdateQualityInspectionRequest $request, QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->update($qualityInspection, $request->validated());
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Quality Inspection updated successfully.');
     }
@@ -87,6 +93,7 @@ class QualityInspectionController extends Controller
     public function destroy(QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->delete($qualityInspection);
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Quality Inspection deleted successfully.');
     }
@@ -95,6 +102,7 @@ class QualityInspectionController extends Controller
     {
         $items = $request->input('items', []);
         $this->inspectionService->recordResults($qualityInspection, $items);
+
         return redirect()->route('admin.quality-control.inspections.show', $qualityInspection)
             ->with('success', 'Inspection results recorded successfully.');
     }
@@ -102,6 +110,7 @@ class QualityInspectionController extends Controller
     public function approve(QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->approve($qualityInspection);
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Inspection approved successfully.');
     }
@@ -109,6 +118,7 @@ class QualityInspectionController extends Controller
     public function reject(QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->reject($qualityInspection);
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Inspection rejected.');
     }
@@ -116,6 +126,7 @@ class QualityInspectionController extends Controller
     public function conditionalAccept(QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->conditionalAccept($qualityInspection);
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Inspection conditionally accepted.');
     }
@@ -123,8 +134,8 @@ class QualityInspectionController extends Controller
     public function cancel(QualityInspection $qualityInspection): RedirectResponse
     {
         $this->inspectionService->cancel($qualityInspection);
+
         return redirect()->route('admin.quality-control.inspections.index')
             ->with('success', 'Inspection cancelled.');
     }
 }
-

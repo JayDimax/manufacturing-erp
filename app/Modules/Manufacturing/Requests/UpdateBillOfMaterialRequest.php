@@ -14,8 +14,9 @@ class UpdateBillOfMaterialRequest extends FormRequest
     public function rules(): array
     {
         $bomId = $this->route('bill_of_material');
+
         return [
-            'bom_number' => 'nullable|string|max:50|unique:bill_of_materials,bom_number,' . $bomId,
+            'bom_number' => 'nullable|string|max:50|unique:bill_of_materials,bom_number,'.$bomId,
             'product_id' => 'required|exists:products,id',
             'version' => 'required|string|max:20',
             'effective_date' => 'required|date',

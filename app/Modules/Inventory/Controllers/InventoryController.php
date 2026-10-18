@@ -3,10 +3,10 @@
 namespace Modules\Inventory\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\View\View;
+use Modules\Administration\Services\WarehouseService;
 use Modules\Inventory\Services\InventoryService;
 use Modules\ProductMaster\Services\ProductService;
-use Modules\Administration\Services\WarehouseService;
-use Illuminate\View\View;
 
 class InventoryController extends Controller
 {
@@ -44,6 +44,7 @@ class InventoryController extends Controller
     public function movements(): View
     {
         $movements = $this->inventoryService->getMovements();
+
         return view('admin.inventory.movements', compact('movements'));
     }
 }

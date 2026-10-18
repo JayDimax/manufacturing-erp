@@ -3,12 +3,12 @@
 namespace Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Accounting\Services\AccountingEventService;
-use Modules\Accounting\Services\PostingService;
-use Modules\Accounting\Models\AccountingEvent;
-use Modules\Accounting\Repositories\JournalMappingRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\Accounting\Models\AccountingEvent;
+use Modules\Accounting\Repositories\JournalMappingRepository;
+use Modules\Accounting\Services\AccountingEventService;
+use Modules\Accounting\Services\PostingService;
 
 class AccountingEventController extends Controller
 {
@@ -23,6 +23,7 @@ class AccountingEventController extends Controller
         $events = $this->accountingEventService->getPaginated();
         $todayPostings = $this->accountingEventService->getTodayPostings();
         $pendingCount = $this->accountingEventService->getPendingEvents()->count();
+
         return view('admin.accounting.events.index', compact('events', 'todayPostings', 'pendingCount'));
     }
 
@@ -30,6 +31,7 @@ class AccountingEventController extends Controller
     {
         $event->load(['branch', 'postingQueue', 'creator']);
         $mapping = $this->journalMappingRepository->findByTransactionType($event->transaction_type);
+
         return view('admin.accounting.events.show', compact('event', 'mapping'));
     }
 
@@ -37,6 +39,7 @@ class AccountingEventController extends Controller
     {
         $queue = $this->postingService->enqueue($event);
         $this->postingService->process($queue);
+
         return redirect()->route('admin.accounting.events.index')
             ->with('success', 'Event processed successfully.');
     }
@@ -44,6 +47,7 @@ class AccountingEventController extends Controller
     public function cancel(AccountingEvent $event): RedirectResponse
     {
         $this->accountingEventService->markCancelled($event);
+
         return redirect()->route('admin.accounting.events.index')
             ->with('success', 'Event cancelled.');
     }
@@ -53,6 +57,7 @@ class AccountingEventController extends Controller
         $this->accountingEventService->repost($event);
         $queue = $this->postingService->enqueue($event);
         $this->postingService->process($queue);
+
         return redirect()->route('admin.accounting.events.index')
             ->with('success', 'Event reposted successfully.');
     }

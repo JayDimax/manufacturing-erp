@@ -12,4 +12,3 @@ enum PurchaseOrderStatus: string
     case Closed = 'closed';
     case Cancelled = 'cancelled';
 }
-

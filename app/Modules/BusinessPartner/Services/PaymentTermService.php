@@ -30,9 +30,10 @@ class PaymentTermService
 
     public function create(array $data): PaymentTerm
     {
-        if (!isset($data['term_code'])) {
+        if (! isset($data['term_code'])) {
             $data['term_code'] = $this->numberSeriesService->generateNext('PAYMENT_TERM');
         }
+
         return $this->paymentTermRepository->create($data);
     }
 
@@ -51,4 +52,3 @@ class PaymentTermService
         return $this->paymentTermRepository->findActive();
     }
 }
-

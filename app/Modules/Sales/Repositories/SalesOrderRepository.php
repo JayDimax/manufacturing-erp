@@ -47,4 +47,3 @@ class SalesOrderRepository extends BaseRepository
             ->get();
     }
 }
-

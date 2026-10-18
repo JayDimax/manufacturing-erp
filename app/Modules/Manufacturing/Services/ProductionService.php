@@ -4,15 +4,16 @@ namespace Modules\Manufacturing\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Inventory\Services\InventoryService;
 use Modules\Manufacturing\Models\ManufacturingOrder;
+use Modules\Manufacturing\Models\ManufacturingOrderItem;
 use Modules\Manufacturing\Models\MaterialIssue;
 use Modules\Manufacturing\Models\ProductionOutput;
-use Modules\Manufacturing\Repositories\MaterialIssueRepository;
+use Modules\Manufacturing\Models\WasteRecord;
 use Modules\Manufacturing\Repositories\MaterialIssueItemRepository;
+use Modules\Manufacturing\Repositories\MaterialIssueRepository;
 use Modules\Manufacturing\Repositories\ProductionOutputRepository;
 use Modules\Manufacturing\Repositories\WasteRecordRepository;
-use Modules\Manufacturing\Enums\ManufacturingOrderStatus;
-use Modules\Inventory\Services\InventoryService;
 
 class ProductionService
 {
@@ -47,13 +48,13 @@ class ProductionService
      */
     public function issueMaterials(array $data): MaterialIssue
     {
-        if (!isset($data['issue_number'])) {
+        if (! isset($data['issue_number'])) {
             $data['issue_number'] = $this->numberSeriesService->generateNext('MATERIAL_ISSUE');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'completed';
         }
-        if (!isset($data['issue_date'])) {
+        if (! isset($data['issue_date'])) {
             $data['issue_date'] = now()->format('Y-m-d');
         }
 
@@ -82,7 +83,7 @@ class ProductionService
 
                 // Update MO item issued quantity
                 if (isset($item['manufacturing_order_item_id'])) {
-                    $moItem = \Modules\Manufacturing\Models\ManufacturingOrderItem::find($item['manufacturing_order_item_id']);
+                    $moItem = ManufacturingOrderItem::find($item['manufacturing_order_item_id']);
                     if ($moItem) {
                         $moItem->issued_quantity += $item['quantity_issued'];
                         $moItem->save();
@@ -101,10 +102,10 @@ class ProductionService
      */
     public function recordOutput(array $data): ProductionOutput
     {
-        if (!isset($data['output_number'])) {
+        if (! isset($data['output_number'])) {
             $data['output_number'] = $this->numberSeriesService->generateNext('PRODUCTION_OUTPUT');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'pending_qc';
         }
 
@@ -176,9 +177,9 @@ class ProductionService
     /**
      * Record waste from production.
      */
-    public function recordWaste(array $data): \Modules\Manufacturing\Models\WasteRecord
+    public function recordWaste(array $data): WasteRecord
     {
-        if (!isset($data['waste_number'])) {
+        if (! isset($data['waste_number'])) {
             $data['waste_number'] = $this->numberSeriesService->generateNext('WASTE_RECORD');
         }
 

@@ -3,12 +3,12 @@
 namespace Modules\Administration\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Modules\Administration\Models\Department;
 use Modules\Administration\Requests\StoreDepartmentRequest;
 use Modules\Administration\Requests\UpdateDepartmentRequest;
 use Modules\Administration\Services\DepartmentService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class DepartmentController extends Controller
 {
@@ -19,6 +19,7 @@ class DepartmentController extends Controller
     public function index(): View
     {
         $departments = $this->departmentService->getPaginated();
+
         return view('admin.departments.index', compact('departments'));
     }
 
@@ -30,6 +31,7 @@ class DepartmentController extends Controller
     public function store(StoreDepartmentRequest $request): RedirectResponse
     {
         $this->departmentService->create($request->validated());
+
         return redirect()->route('admin.departments.index')
             ->with('success', 'Department created successfully.');
     }
@@ -47,6 +49,7 @@ class DepartmentController extends Controller
     public function update(UpdateDepartmentRequest $request, Department $department): RedirectResponse
     {
         $this->departmentService->update($department, $request->validated());
+
         return redirect()->route('admin.departments.index')
             ->with('success', 'Department updated successfully.');
     }
@@ -54,8 +57,8 @@ class DepartmentController extends Controller
     public function destroy(Department $department): RedirectResponse
     {
         $this->departmentService->delete($department);
+
         return redirect()->route('admin.departments.index')
             ->with('success', 'Department deleted successfully.');
     }
 }
-

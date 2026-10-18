@@ -42,4 +42,3 @@ class SupplierReturnPolicy
         return $user->can('supplier-return-cancel');
     }
 }
-

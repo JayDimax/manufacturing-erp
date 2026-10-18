@@ -32,4 +32,3 @@ class BranchPolicy
         return $user->can('branch-delete');
     }
 }
-

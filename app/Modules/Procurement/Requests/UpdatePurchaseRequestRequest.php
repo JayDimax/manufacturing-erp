@@ -14,7 +14,7 @@ class UpdatePurchaseRequestRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'request_number' => 'nullable|string|max:50|unique:purchase_requests,request_number,' . $this->route('purchase_request')?->id,
+            'request_number' => 'nullable|string|max:50|unique:purchase_requests,request_number,'.$this->route('purchase_request')?->id,
             'request_date' => 'required|date',
             'department_id' => 'required|exists:departments,id',
             'required_date' => 'required|date|after_or_equal:request_date',
@@ -25,4 +25,3 @@ class UpdatePurchaseRequestRequest extends FormRequest
         ];
     }
 }
-

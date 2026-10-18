@@ -19,4 +19,3 @@ class PickingItemRepository extends BaseRepository
             ->get();
     }
 }
-

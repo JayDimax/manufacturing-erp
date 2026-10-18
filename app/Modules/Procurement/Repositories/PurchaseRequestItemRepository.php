@@ -17,4 +17,3 @@ class PurchaseRequestItemRepository extends BaseRepository
         return $this->model->where('purchase_request_id', $purchaseRequestId)->get();
     }
 }
-

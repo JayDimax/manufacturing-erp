@@ -4,11 +4,11 @@ namespace Modules\Accounting\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Accounting\Enums\AccountingEventStatus;
 use Modules\Accounting\Models\AccountingEvent;
 use Modules\Accounting\Repositories\AccountingEventRepository;
 use Modules\Accounting\Repositories\JournalMappingRepository;
 use Modules\Accounting\Repositories\PostingQueueRepository;
-use Modules\Accounting\Enums\AccountingEventStatus;
 
 class AccountingEventService
 {
@@ -27,18 +27,19 @@ class AccountingEventService
 
     public function create(array $data): AccountingEvent
     {
-        if (!isset($data['event_number'])) {
+        if (! isset($data['event_number'])) {
             $data['event_number'] = $this->numberSeriesService->generateNext('AccountingEvent', 'AE');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = AccountingEventStatus::Pending->value;
         }
-        if (!isset($data['posting_date'])) {
+        if (! isset($data['posting_date'])) {
             $data['posting_date'] = now()->toDateString();
         }
 
         $event = $this->eventRepository->create($data);
         $this->auditService->logCreate('accounting', $event->event_number, $data);
+
         return $event;
     }
 
@@ -49,12 +50,14 @@ class AccountingEventService
         if ($result) {
             $this->auditService->logUpdate('accounting', $event->event_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(AccountingEvent $event): bool
     {
         $this->auditService->logDelete('accounting', $event->event_number, $event->toArray());
+
         return $this->eventRepository->delete($event);
     }
 
@@ -66,6 +69,7 @@ class AccountingEventService
         if ($result) {
             $this->auditService->log('post', 'accounting', $event->event_number);
         }
+
         return $result;
     }
 
@@ -74,6 +78,7 @@ class AccountingEventService
         $event->status = AccountingEventStatus::Failed->value;
         $event->error_message = $errorMessage;
         $event->retry_count = $event->retry_count + 1;
+
         return $event->save();
     }
 
@@ -84,6 +89,7 @@ class AccountingEventService
         if ($result) {
             $this->auditService->logCancel('accounting', $event->event_number);
         }
+
         return $result;
     }
 
@@ -96,6 +102,7 @@ class AccountingEventService
         if ($result) {
             $this->auditService->log('repost', 'accounting', $event->event_number);
         }
+
         return $result;
     }
 

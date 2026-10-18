@@ -3,12 +3,13 @@
 namespace Modules\QualityControl\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\QualityControl\Models\NonConformance;
-use Modules\QualityControl\Requests\StoreNonConformanceRequest;
-use Modules\QualityControl\Services\NonConformanceService;
-use Modules\QualityControl\Repositories\DefectTypeRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\QualityControl\Models\NonConformance;
+use Modules\QualityControl\Models\QualityInspection;
+use Modules\QualityControl\Repositories\DefectTypeRepository;
+use Modules\QualityControl\Requests\StoreNonConformanceRequest;
+use Modules\QualityControl\Services\NonConformanceService;
 
 class NonConformanceController extends Controller
 {
@@ -20,23 +21,27 @@ class NonConformanceController extends Controller
     public function index(): View
     {
         $nonConformances = $this->ncService->getPaginated();
+
         return view('admin.quality-control.non-conformances.index', compact('nonConformances'));
     }
 
     public function create(): View
     {
+        $inspections = QualityInspection::all();
         $defectTypes = $this->defectTypeRepo->findActive();
         $severities = [
             'minor' => 'Minor',
             'major' => 'Major',
             'critical' => 'Critical',
         ];
-        return view('admin.quality-control.non-conformances.create', compact('defectTypes', 'severities'));
+
+        return view('admin.quality-control.non-conformances.create', compact('inspections', 'defectTypes', 'severities'));
     }
 
     public function store(StoreNonConformanceRequest $request): RedirectResponse
     {
         $this->ncService->create($request->validated());
+
         return redirect()->route('admin.quality-control.non-conformances.index')
             ->with('success', 'Non-conformance recorded successfully.');
     }
@@ -44,12 +49,27 @@ class NonConformanceController extends Controller
     public function show(NonConformance $nonConformance): View
     {
         $nonConformance->load(['inspection.product', 'defectType', 'assignedTo', 'correctiveActions']);
+
         return view('admin.quality-control.non-conformances.show', compact('nonConformance'));
+    }
+
+    public function edit(NonConformance $nonConformance): View
+    {
+        $inspections = QualityInspection::all();
+        $defectTypes = $this->defectTypeRepo->findActive();
+        $severities = [
+            'minor' => 'Minor',
+            'major' => 'Major',
+            'critical' => 'Critical',
+        ];
+
+        return view('admin.quality-control.non-conformances.edit', compact('nonConformance', 'inspections', 'defectTypes', 'severities'));
     }
 
     public function update(StoreNonConformanceRequest $request, NonConformance $nonConformance): RedirectResponse
     {
         $this->ncService->update($nonConformance, $request->validated());
+
         return redirect()->route('admin.quality-control.non-conformances.index')
             ->with('success', 'Non-conformance updated successfully.');
     }
@@ -57,6 +77,7 @@ class NonConformanceController extends Controller
     public function destroy(NonConformance $nonConformance): RedirectResponse
     {
         $this->ncService->delete($nonConformance);
+
         return redirect()->route('admin.quality-control.non-conformances.index')
             ->with('success', 'Non-conformance deleted successfully.');
     }
@@ -68,6 +89,7 @@ class NonConformanceController extends Controller
             $request->input('resolution_notes'),
             $request->input('root_cause')
         );
+
         return redirect()->route('admin.quality-control.non-conformances.index')
             ->with('success', 'Non-conformance resolved.');
     }
@@ -75,8 +97,8 @@ class NonConformanceController extends Controller
     public function close(NonConformance $nonConformance): RedirectResponse
     {
         $this->ncService->close($nonConformance);
+
         return redirect()->route('admin.quality-control.non-conformances.index')
             ->with('success', 'Non-conformance closed.');
     }
 }
-

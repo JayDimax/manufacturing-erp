@@ -33,4 +33,3 @@ class PutawayRepository extends BaseRepository
             ->get();
     }
 }
-

@@ -14,11 +14,10 @@ class UpdateUnitOfMeasureRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uom_code' => 'required|string|max:20|unique:units_of_measure,uom_code,' . $this->route('units_of_measure')?->id,
+            'uom_code' => 'required|string|max:20|unique:units_of_measure,uom_code,'.$this->route('units_of_measure')?->id,
             'uom_name' => 'required|string|max:100',
             'uom_type' => 'required|string|max:50|in:reference,transactional',
             'is_active' => 'boolean',
         ];
     }
 }
-

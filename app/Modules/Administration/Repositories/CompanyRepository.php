@@ -17,4 +17,3 @@ class CompanyRepository extends BaseRepository
         return $this->model->where('is_active', true)->first();
     }
 }
-

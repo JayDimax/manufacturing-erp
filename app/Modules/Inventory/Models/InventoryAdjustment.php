@@ -2,9 +2,11 @@
 
 namespace Modules\Inventory\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class InventoryAdjustment extends Model
 {
@@ -40,7 +42,7 @@ class InventoryAdjustment extends Model
         parent::boot();
         static::creating(function (InventoryAdjustment $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -51,7 +53,7 @@ class InventoryAdjustment extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function items()
@@ -61,12 +63,11 @@ class InventoryAdjustment extends Model
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function rejecter()
     {
-        return $this->belongsTo(\App\Models\User::class, 'rejected_by');
+        return $this->belongsTo(User::class, 'rejected_by');
     }
 }
-

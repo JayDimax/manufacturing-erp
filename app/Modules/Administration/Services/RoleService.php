@@ -2,8 +2,8 @@
 
 namespace Modules\Administration\Services;
 
-use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleService
 {
@@ -20,18 +20,20 @@ class RoleService
     public function create(array $data, array $permissions = []): Role
     {
         $role = Role::create(['name' => $data['name'], 'guard_name' => 'web']);
-        if (!empty($permissions)) {
+        if (! empty($permissions)) {
             $role->syncPermissions($permissions);
         }
+
         return $role;
     }
 
     public function update(Role $role, array $data, array $permissions = []): bool
     {
         $role->update(['name' => $data['name']]);
-        if (!empty($permissions)) {
+        if (! empty($permissions)) {
             $role->syncPermissions($permissions);
         }
+
         return true;
     }
 
@@ -60,7 +62,7 @@ class RoleService
             $group = $parts[0] ?? 'general';
             $action = $parts[1] ?? $permission->name;
 
-            if (!isset($grouped[$group])) {
+            if (! isset($grouped[$group])) {
                 $grouped[$group] = [];
             }
             $grouped[$group][] = $permission;
@@ -69,4 +71,3 @@ class RoleService
         return $grouped;
     }
 }
-

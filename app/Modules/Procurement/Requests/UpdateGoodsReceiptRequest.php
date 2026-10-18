@@ -14,7 +14,7 @@ class UpdateGoodsReceiptRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'goods_receipt_number' => 'nullable|string|max:50|unique:goods_receipts,goods_receipt_number,' . $this->route('goods_receipt')?->id,
+            'goods_receipt_number' => 'nullable|string|max:50|unique:goods_receipts,goods_receipt_number,'.$this->route('goods_receipt')?->id,
             'purchase_order_id' => 'required|exists:purchase_orders,id',
             'delivery_receipt_number' => 'nullable|string|max:100',
             'supplier_invoice_number' => 'nullable|string|max:100',
@@ -26,4 +26,3 @@ class UpdateGoodsReceiptRequest extends FormRequest
         ];
     }
 }
-

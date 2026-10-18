@@ -5,6 +5,8 @@ namespace Modules\Procurement\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\ProductMaster\Models\Product;
+use Modules\ProductMaster\Models\UnitOfMeasure;
 
 class PurchaseOrderItem extends Model
 {
@@ -38,7 +40,7 @@ class PurchaseOrderItem extends Model
         parent::boot();
         static::creating(function (PurchaseOrderItem $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -59,12 +61,11 @@ class PurchaseOrderItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function uom()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\UnitOfMeasure::class, 'uom_id');
+        return $this->belongsTo(UnitOfMeasure::class, 'uom_id');
     }
 }
-

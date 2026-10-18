@@ -107,4 +107,3 @@ class DefaultQualityControlSeeder extends Seeder
         ]);
     }
 }
-

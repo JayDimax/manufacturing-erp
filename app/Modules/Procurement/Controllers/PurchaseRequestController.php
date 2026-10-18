@@ -3,26 +3,29 @@
 namespace Modules\Procurement\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Administration\Services\DepartmentService;
 use Modules\Procurement\Models\PurchaseRequest;
 use Modules\Procurement\Requests\StorePurchaseRequestRequest;
 use Modules\Procurement\Requests\UpdatePurchaseRequestRequest;
 use Modules\Procurement\Services\PurchaseRequestService;
-use Modules\Administration\Services\DepartmentService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\ProductMaster\Services\UnitOfMeasureService;
 
 class PurchaseRequestController extends Controller
 {
     public function __construct(
         protected PurchaseRequestService $purchaseRequestService,
         protected DepartmentService $departmentService,
-        protected \Modules\ProductMaster\Services\ProductService $productService,
-        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
+        protected ProductService $productService,
+        protected UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
     {
         $purchaseRequests = $this->purchaseRequestService->getPaginated();
+
         return view('admin.purchase-requests.index', compact('purchaseRequests'));
     }
 
@@ -37,12 +40,14 @@ class PurchaseRequestController extends Controller
             'high' => 'High',
             'urgent' => 'Urgent',
         ];
+
         return view('admin.purchase-requests.create', compact('departments', 'priorities', 'products', 'uoms'));
     }
 
     public function store(StorePurchaseRequestRequest $request): RedirectResponse
     {
         $this->purchaseRequestService->create($request->validated());
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request created successfully.');
     }
@@ -50,6 +55,7 @@ class PurchaseRequestController extends Controller
     public function show(PurchaseRequest $purchaseRequest): View
     {
         $purchaseRequest->load(['department', 'items.product', 'items.uom', 'purchaseOrders']);
+
         return view('admin.purchase-requests.show', compact('purchaseRequest'));
     }
 
@@ -65,12 +71,14 @@ class PurchaseRequestController extends Controller
             'urgent' => 'Urgent',
         ];
         $purchaseRequest->load(['items.product', 'items.uom']);
+
         return view('admin.purchase-requests.edit', compact('purchaseRequest', 'departments', 'priorities', 'products', 'uoms'));
     }
 
     public function update(UpdatePurchaseRequestRequest $request, PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->update($purchaseRequest, $request->validated());
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request updated successfully.');
     }
@@ -78,6 +86,7 @@ class PurchaseRequestController extends Controller
     public function destroy(PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->delete($purchaseRequest);
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request deleted successfully.');
     }
@@ -85,6 +94,7 @@ class PurchaseRequestController extends Controller
     public function approve(PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->approve($purchaseRequest);
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request approved successfully.');
     }
@@ -92,6 +102,7 @@ class PurchaseRequestController extends Controller
     public function reject(PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->reject($purchaseRequest);
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request rejected successfully.');
     }
@@ -99,6 +110,7 @@ class PurchaseRequestController extends Controller
     public function submit(PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->submit($purchaseRequest);
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request submitted successfully.');
     }
@@ -106,8 +118,8 @@ class PurchaseRequestController extends Controller
     public function cancel(PurchaseRequest $purchaseRequest): RedirectResponse
     {
         $this->purchaseRequestService->cancel($purchaseRequest);
+
         return redirect()->route('admin.purchase-requests.index')
             ->with('success', 'Purchase request cancelled successfully.');
     }
 }
-

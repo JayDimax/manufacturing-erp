@@ -24,6 +24,7 @@ class ContactPersonService
     public function create(int $partnerId, array $data): ContactPerson
     {
         $data['business_partner_id'] = $partnerId;
+
         return $this->contactPersonRepository->create($data);
     }
 

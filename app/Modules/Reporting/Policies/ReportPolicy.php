@@ -21,4 +21,3 @@ class ReportPolicy
         return $user->can('report-export');
     }
 }
-

@@ -5,6 +5,8 @@ namespace Modules\Warehouse\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
 
 class Packing extends Model
 {
@@ -34,7 +36,7 @@ class Packing extends Model
         parent::boot();
         static::creating(function (Packing $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -45,7 +47,7 @@ class Packing extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function reference()
@@ -55,7 +57,6 @@ class Packing extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 }
-

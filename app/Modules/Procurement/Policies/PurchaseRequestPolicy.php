@@ -52,4 +52,3 @@ class PurchaseRequestPolicy
         return $user->can('purchase-request-cancel');
     }
 }
-

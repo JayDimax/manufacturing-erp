@@ -22,4 +22,3 @@ class BusinessPartnerRepository extends BaseRepository
         return $this->model->where('partner_type', $type)->get();
     }
 }
-

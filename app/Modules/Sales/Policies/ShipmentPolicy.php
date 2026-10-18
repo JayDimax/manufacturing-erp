@@ -21,4 +21,3 @@ class ShipmentPolicy
         return $user->can('shipment-create');
     }
 }
-

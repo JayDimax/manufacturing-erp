@@ -47,4 +47,3 @@ class SalesOrderPolicy
         return $user->can('sales-order-create');
     }
 }
-

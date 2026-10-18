@@ -19,4 +19,3 @@ class PackingListRepository extends BaseRepository
             ->get();
     }
 }
-

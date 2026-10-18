@@ -40,7 +40,7 @@ class InventoryMovementRepository extends BaseRepository
         if ($warehouseId) {
             $query->where('warehouse_id', $warehouseId);
         }
+
         return $query->orderBy('created_at', 'asc')->get();
     }
 }
-

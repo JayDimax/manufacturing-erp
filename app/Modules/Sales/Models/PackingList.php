@@ -5,6 +5,7 @@ namespace Modules\Sales\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\ProductMaster\Models\Product;
 
 class PackingList extends Model
 {
@@ -30,7 +31,7 @@ class PackingList extends Model
         parent::boot();
         static::creating(function (PackingList $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -46,7 +47,6 @@ class PackingList extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 }
-

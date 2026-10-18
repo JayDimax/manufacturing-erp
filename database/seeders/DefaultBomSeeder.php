@@ -13,8 +13,9 @@ class DefaultBomSeeder extends Seeder
     {
         // Get or create a finished good product for Banana Chips
         $finishedGood = Product::where('product_type', 'finished_good')->first();
-        if (!$finishedGood) {
+        if (! $finishedGood) {
             $this->command->warn('No finished good product found. Skipping BOM seeder.');
+
             return;
         }
 
@@ -28,8 +29,9 @@ class DefaultBomSeeder extends Seeder
         $bag = $packaging->firstWhere('product_code', 'PKG-BAG');
         $label = $packaging->firstWhere('product_code', 'PKG-LABEL');
 
-        if (!$banana || !$oil) {
+        if (! $banana || ! $oil) {
             $this->command->warn('Required raw materials not found. Skipping BOM seeder.');
+
             return;
         }
 

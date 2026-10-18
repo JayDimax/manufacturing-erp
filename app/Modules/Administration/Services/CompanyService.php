@@ -31,4 +31,3 @@ class CompanyService
         return $this->companyRepository->update($company, $data);
     }
 }
-

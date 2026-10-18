@@ -46,3 +46,31 @@
 </div>
 @endsection
 
+@push('scripts')
+<script>
+function bindWarehouseLocation(whSelectId, locSelectId) {
+    const whSelect = document.getElementById(whSelectId);
+    if (!whSelect) return;
+    whSelect.addEventListener('change', function() {
+        const whId = this.value;
+        const locSelect = document.getElementById(locSelectId);
+        if (!locSelect) return;
+        if (whId) {
+            fetch(`/admin/warehouse/locations/${whId}`)
+                .then(r => r.json())
+                .then(data => {
+                    locSelect.innerHTML = '<option value="">Select Location</option>';
+                    data.forEach(loc => {
+                        locSelect.innerHTML += `<option value="${loc.id}">${loc.location_code}${loc.storage_area ? ' - ' + loc.storage_area : ''}</option>`;
+                    });
+                });
+        } else {
+            locSelect.innerHTML = '<option value="">Select Location</option>';
+        }
+    });
+}
+bindWarehouseLocation('source_warehouse_id', 'source_location_id');
+bindWarehouseLocation('destination_warehouse_id', 'destination_location_id');
+</script>
+@endpush
+

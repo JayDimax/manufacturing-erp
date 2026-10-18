@@ -2,6 +2,7 @@
 
 namespace Modules\QualityControl\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -28,7 +29,7 @@ class CorrectiveAction extends Model
         parent::boot();
         static::creating(function (CorrectiveAction $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -49,12 +50,11 @@ class CorrectiveAction extends Model
 
     public function responsiblePerson()
     {
-        return $this->belongsTo(\App\Models\User::class, 'responsible_person_id');
+        return $this->belongsTo(User::class, 'responsible_person_id');
     }
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }
-

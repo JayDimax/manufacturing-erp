@@ -4,13 +4,13 @@ namespace Modules\Manufacturing\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Inventory\Repositories\StockReservationRepository;
+use Modules\Inventory\Services\InventoryService;
 use Modules\Manufacturing\Enums\ManufacturingOrderStatus;
 use Modules\Manufacturing\Models\ManufacturingOrder;
-use Modules\Manufacturing\Repositories\ManufacturingOrderRepository;
-use Modules\Manufacturing\Repositories\ManufacturingOrderItemRepository;
 use Modules\Manufacturing\Repositories\BillOfMaterialRepository;
-use Modules\Inventory\Services\InventoryService;
-use Modules\Inventory\Repositories\StockReservationRepository;
+use Modules\Manufacturing\Repositories\ManufacturingOrderItemRepository;
+use Modules\Manufacturing\Repositories\ManufacturingOrderRepository;
 
 class ManufacturingOrderService
 {
@@ -36,10 +36,10 @@ class ManufacturingOrderService
 
     public function create(array $data): ManufacturingOrder
     {
-        if (!isset($data['mo_number'])) {
+        if (! isset($data['mo_number'])) {
             $data['mo_number'] = $this->numberSeriesService->generateNext('MANUFACTURING_ORDER');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = ManufacturingOrderStatus::Draft->value;
         }
 
@@ -84,6 +84,7 @@ class ManufacturingOrderService
     public function delete(ManufacturingOrder $mo): bool
     {
         $this->auditService->logDelete('manufacturing', $mo->mo_number, $mo->toArray());
+
         return $this->moRepository->delete($mo);
     }
 

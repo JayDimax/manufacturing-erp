@@ -4,6 +4,9 @@ namespace Modules\Inventory\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
+use Modules\ProductMaster\Models\UnitOfMeasure;
 
 class InventoryMovement extends Model
 {
@@ -39,7 +42,7 @@ class InventoryMovement extends Model
         parent::boot();
         static::creating(function (InventoryMovement $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -47,17 +50,16 @@ class InventoryMovement extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function uom()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\UnitOfMeasure::class, 'uom_id');
+        return $this->belongsTo(UnitOfMeasure::class, 'uom_id');
     }
 }
-

@@ -3,14 +3,16 @@
 namespace Modules\Procurement\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Administration\Services\WarehouseService;
 use Modules\Procurement\Models\GoodsReceipt;
 use Modules\Procurement\Requests\StoreGoodsReceiptRequest;
 use Modules\Procurement\Requests\UpdateGoodsReceiptRequest;
 use Modules\Procurement\Services\GoodsReceiptService;
 use Modules\Procurement\Services\PurchaseOrderService;
-use Modules\Administration\Services\WarehouseService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\ProductMaster\Services\UnitOfMeasureService;
 
 class GoodsReceiptController extends Controller
 {
@@ -18,13 +20,14 @@ class GoodsReceiptController extends Controller
         protected GoodsReceiptService $goodsReceiptService,
         protected PurchaseOrderService $purchaseOrderService,
         protected WarehouseService $warehouseService,
-        protected \Modules\ProductMaster\Services\ProductService $productService,
-        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
+        protected ProductService $productService,
+        protected UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
     {
         $goodsReceipts = $this->goodsReceiptService->getPaginated();
+
         return view('admin.goods-receipts.index', compact('goodsReceipts'));
     }
 
@@ -34,12 +37,14 @@ class GoodsReceiptController extends Controller
         $warehouses = $this->warehouseService->getAll();
         $products = $this->productService->getAll();
         $uoms = $this->uomService->getAll();
+
         return view('admin.goods-receipts.create', compact('purchaseOrders', 'warehouses', 'products', 'uoms'));
     }
 
     public function store(StoreGoodsReceiptRequest $request): RedirectResponse
     {
         $this->goodsReceiptService->create($request->validated());
+
         return redirect()->route('admin.goods-receipts.index')
             ->with('success', 'Goods receipt created successfully.');
     }
@@ -47,6 +52,7 @@ class GoodsReceiptController extends Controller
     public function show(GoodsReceipt $goodsReceipt): View
     {
         $goodsReceipt->load(['purchaseOrder', 'warehouse', 'items.product', 'items.uom', 'supplierReturns']);
+
         return view('admin.goods-receipts.show', compact('goodsReceipt'));
     }
 
@@ -57,12 +63,14 @@ class GoodsReceiptController extends Controller
         $products = $this->productService->getAll();
         $uoms = $this->uomService->getAll();
         $goodsReceipt->load(['items.product', 'items.uom']);
+
         return view('admin.goods-receipts.edit', compact('goodsReceipt', 'purchaseOrders', 'warehouses', 'products', 'uoms'));
     }
 
     public function update(UpdateGoodsReceiptRequest $request, GoodsReceipt $goodsReceipt): RedirectResponse
     {
         $this->goodsReceiptService->update($goodsReceipt, $request->validated());
+
         return redirect()->route('admin.goods-receipts.index')
             ->with('success', 'Goods receipt updated successfully.');
     }
@@ -70,6 +78,7 @@ class GoodsReceiptController extends Controller
     public function destroy(GoodsReceipt $goodsReceipt): RedirectResponse
     {
         $this->goodsReceiptService->delete($goodsReceipt);
+
         return redirect()->route('admin.goods-receipts.index')
             ->with('success', 'Goods receipt deleted successfully.');
     }
@@ -77,6 +86,7 @@ class GoodsReceiptController extends Controller
     public function complete(GoodsReceipt $goodsReceipt): RedirectResponse
     {
         $this->goodsReceiptService->complete($goodsReceipt);
+
         return redirect()->route('admin.goods-receipts.index')
             ->with('success', 'Goods receipt completed successfully.');
     }
@@ -84,8 +94,8 @@ class GoodsReceiptController extends Controller
     public function cancel(GoodsReceipt $goodsReceipt): RedirectResponse
     {
         $this->goodsReceiptService->cancel($goodsReceipt);
+
         return redirect()->route('admin.goods-receipts.index')
             ->with('success', 'Goods receipt cancelled successfully.');
     }
 }
-

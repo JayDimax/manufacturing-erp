@@ -5,12 +5,11 @@ namespace Modules\QualityControl\Services;
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
 use Modules\QualityControl\Enums\QualityInspectionStatus;
-use Modules\QualityControl\Enums\QualityInspectionType;
 use Modules\QualityControl\Models\QualityInspection;
-use Modules\QualityControl\Repositories\QualityInspectionRepository;
-use Modules\QualityControl\Repositories\QualityInspectionItemRepository;
-use Modules\QualityControl\Repositories\QualityChecklistRepository;
 use Modules\QualityControl\Repositories\InspectionTypeRepository;
+use Modules\QualityControl\Repositories\QualityChecklistRepository;
+use Modules\QualityControl\Repositories\QualityInspectionItemRepository;
+use Modules\QualityControl\Repositories\QualityInspectionRepository;
 
 class QualityInspectionService
 {
@@ -35,7 +34,7 @@ class QualityInspectionService
 
     public function create(array $data): QualityInspection
     {
-        if (!isset($data['inspection_number'])) {
+        if (! isset($data['inspection_number'])) {
             $prefix = match ($data['inspection_type'] ?? 'incoming') {
                 'incoming' => 'INCOMING_QC',
                 'in_process' => 'PROCESS_QC',
@@ -44,7 +43,7 @@ class QualityInspectionService
             };
             $data['inspection_number'] = $this->numberSeriesService->generateNext($prefix);
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = QualityInspectionStatus::Draft->value;
         }
 
@@ -91,6 +90,7 @@ class QualityInspectionService
     public function delete(QualityInspection $inspection): bool
     {
         $this->auditService->logDelete('quality_control', $inspection->inspection_number, $inspection->toArray());
+
         return $this->inspectionRepository->delete($inspection);
     }
 
@@ -129,7 +129,7 @@ class QualityInspectionService
 
         // Update inspection quantities
         $totalItems = $items ? count($items) : 0;
-        $passedItems = count(array_filter($items, fn($i) => ($i['result'] ?? 'pass') === 'pass'));
+        $passedItems = count(array_filter($items, fn ($i) => ($i['result'] ?? 'pass') === 'pass'));
         $failedItems = $totalItems - $passedItems;
 
         $this->inspectionRepository->update($inspection, [
@@ -222,4 +222,3 @@ class QualityInspectionService
         return compact('total', 'pending', 'today', 'passed', 'failed');
     }
 }
-

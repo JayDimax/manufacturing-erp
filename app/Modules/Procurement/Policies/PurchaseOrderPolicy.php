@@ -52,4 +52,3 @@ class PurchaseOrderPolicy
         return $user->can('purchase-order-send');
     }
 }
-

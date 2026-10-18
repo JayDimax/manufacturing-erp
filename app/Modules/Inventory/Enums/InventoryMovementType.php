@@ -16,4 +16,3 @@ enum InventoryMovementType: string
     case Shipment = 'shipment';
     case ReturnToSupplier = 'return_to_supplier';
 }
-

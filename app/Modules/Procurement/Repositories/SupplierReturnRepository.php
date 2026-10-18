@@ -22,4 +22,3 @@ class SupplierReturnRepository extends BaseRepository
         return $this->model->where('status', $status)->get();
     }
 }
-

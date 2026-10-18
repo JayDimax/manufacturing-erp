@@ -30,9 +30,10 @@ class DepartmentService
 
     public function create(array $data): Department
     {
-        if (!isset($data['department_code'])) {
+        if (! isset($data['department_code'])) {
             $data['department_code'] = $this->numberSeriesService->generateNext('DEPARTMENT');
         }
+
         return $this->departmentRepository->create($data);
     }
 
@@ -51,4 +52,3 @@ class DepartmentService
         return $this->departmentRepository->findActive();
     }
 }
-

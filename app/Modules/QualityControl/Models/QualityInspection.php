@@ -2,8 +2,10 @@
 
 namespace Modules\QualityControl\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\ProductMaster\Models\Product;
 
 class QualityInspection extends Model
 {
@@ -33,10 +35,10 @@ class QualityInspection extends Model
         parent::boot();
         static::creating(function (QualityInspection $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
-            if (!$model->inspection_date) {
+            if (! $model->inspection_date) {
                 $model->inspection_date = now();
             }
         });
@@ -57,17 +59,17 @@ class QualityInspection extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function inspector()
     {
-        return $this->belongsTo(\App\Models\User::class, 'inspector_id');
+        return $this->belongsTo(User::class, 'inspector_id');
     }
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function items()
@@ -90,4 +92,3 @@ class QualityInspection extends Model
         return $this->hasMany(CorrectiveAction::class, 'quality_inspection_id');
     }
 }
-

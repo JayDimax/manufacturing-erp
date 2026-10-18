@@ -34,4 +34,3 @@ class DefaultProductCategorySeeder extends Seeder
         }
     }
 }
-

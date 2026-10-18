@@ -95,10 +95,9 @@ class DefaultUserSeeder extends Seeder
             );
 
             // Assign role (firstOrCreate may have fetched existing user without assigning role)
-            if (!$user->hasRole($role)) {
+            if (! $user->hasRole($role)) {
                 $user->assignRole($role);
             }
         }
     }
 }
-

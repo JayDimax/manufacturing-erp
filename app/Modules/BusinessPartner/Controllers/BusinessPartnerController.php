@@ -3,13 +3,13 @@
 namespace Modules\BusinessPartner\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Modules\BusinessPartner\Models\BusinessPartner;
 use Modules\BusinessPartner\Requests\StoreBusinessPartnerRequest;
 use Modules\BusinessPartner\Requests\UpdateBusinessPartnerRequest;
 use Modules\BusinessPartner\Services\BusinessPartnerService;
 use Modules\BusinessPartner\Services\PaymentTermService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class BusinessPartnerController extends Controller
 {
@@ -21,6 +21,7 @@ class BusinessPartnerController extends Controller
     public function index(): View
     {
         $businessPartners = $this->businessPartnerService->getPaginated();
+
         return view('admin.business-partners.index', compact('businessPartners'));
     }
 
@@ -34,12 +35,14 @@ class BusinessPartnerController extends Controller
             'customs_broker' => 'Customs Broker',
             'service_provider' => 'Service Provider',
         ];
+
         return view('admin.business-partners.create', compact('paymentTerms', 'partnerTypes'));
     }
 
     public function store(StoreBusinessPartnerRequest $request): RedirectResponse
     {
         $this->businessPartnerService->create($request->validated());
+
         return redirect()->route('admin.business-partners.index')
             ->with('success', 'Business partner created successfully.');
     }
@@ -47,6 +50,7 @@ class BusinessPartnerController extends Controller
     public function show(BusinessPartner $businessPartner): View
     {
         $businessPartner->load(['paymentTerm', 'contactPersons']);
+
         return view('admin.business-partners.show', compact('businessPartner'));
     }
 
@@ -60,12 +64,14 @@ class BusinessPartnerController extends Controller
             'customs_broker' => 'Customs Broker',
             'service_provider' => 'Service Provider',
         ];
+
         return view('admin.business-partners.edit', compact('businessPartner', 'paymentTerms', 'partnerTypes'));
     }
 
     public function update(UpdateBusinessPartnerRequest $request, BusinessPartner $businessPartner): RedirectResponse
     {
         $this->businessPartnerService->update($businessPartner, $request->validated());
+
         return redirect()->route('admin.business-partners.index')
             ->with('success', 'Business partner updated successfully.');
     }
@@ -73,6 +79,7 @@ class BusinessPartnerController extends Controller
     public function destroy(BusinessPartner $businessPartner): RedirectResponse
     {
         $this->businessPartnerService->delete($businessPartner);
+
         return redirect()->route('admin.business-partners.index')
             ->with('success', 'Business partner deleted successfully.');
     }

@@ -5,8 +5,9 @@ namespace Modules\Procurement\Services;
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
 use Modules\Procurement\Models\GoodsReceipt;
-use Modules\Procurement\Repositories\GoodsReceiptRepository;
+use Modules\Procurement\Models\PurchaseOrderItem;
 use Modules\Procurement\Repositories\GoodsReceiptItemRepository;
+use Modules\Procurement\Repositories\GoodsReceiptRepository;
 
 class GoodsReceiptService
 {
@@ -29,10 +30,10 @@ class GoodsReceiptService
 
     public function create(array $data): GoodsReceipt
     {
-        if (!isset($data['goods_receipt_number'])) {
+        if (! isset($data['goods_receipt_number'])) {
             $data['goods_receipt_number'] = $this->numberSeriesService->generateNext('GR');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
         }
 
@@ -43,6 +44,12 @@ class GoodsReceiptService
 
         foreach ($items as $item) {
             $item['goods_receipt_id'] = $goodsReceipt->id;
+            if (empty($item['purchase_order_item_id']) && ! empty($goodsReceipt->purchase_order_id)) {
+                $item['purchase_order_item_id'] = PurchaseOrderItem::where('purchase_order_id', $goodsReceipt->purchase_order_id)
+                    ->where('product_id', $item['product_id'] ?? null)
+                    ->value('id')
+                    ?? PurchaseOrderItem::where('purchase_order_id', $goodsReceipt->purchase_order_id)->value('id');
+            }
             $this->goodsReceiptItemRepository->create($item);
         }
 
@@ -63,6 +70,12 @@ class GoodsReceiptService
             $goodsReceipt->items()->delete();
             foreach ($items as $item) {
                 $item['goods_receipt_id'] = $goodsReceipt->id;
+                if (empty($item['purchase_order_item_id']) && ! empty($goodsReceipt->purchase_order_id)) {
+                    $item['purchase_order_item_id'] = PurchaseOrderItem::where('purchase_order_id', $goodsReceipt->purchase_order_id)
+                        ->where('product_id', $item['product_id'] ?? null)
+                        ->value('id')
+                        ?? PurchaseOrderItem::where('purchase_order_id', $goodsReceipt->purchase_order_id)->value('id');
+                }
                 $this->goodsReceiptItemRepository->create($item);
             }
         }
@@ -77,6 +90,7 @@ class GoodsReceiptService
     public function delete(GoodsReceipt $goodsReceipt): bool
     {
         $this->auditService->logDelete('procurement', $goodsReceipt->goods_receipt_number, $goodsReceipt->toArray());
+
         return $this->goodsReceiptRepository->delete($goodsReceipt);
     }
 
@@ -114,4 +128,3 @@ class GoodsReceiptService
         return $this->goodsReceiptRepository->findByStatus($status);
     }
 }
-

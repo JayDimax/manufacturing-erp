@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use Modules\Administration\Models\Company;
 
 class DefaultCompanySeeder extends Seeder
@@ -23,7 +22,7 @@ class DefaultCompanySeeder extends Seeder
             ]
         );
 
-        if (!$company->wasRecentlyCreated) {
+        if (! $company->wasRecentlyCreated) {
             $this->command->info('Company already exists, skipped.');
         }
     }

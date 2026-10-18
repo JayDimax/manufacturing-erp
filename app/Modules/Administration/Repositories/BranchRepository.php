@@ -17,4 +17,3 @@ class BranchRepository extends BaseRepository
         return $this->model->where('is_active', true)->get();
     }
 }
-

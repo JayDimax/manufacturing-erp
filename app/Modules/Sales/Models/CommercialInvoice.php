@@ -5,6 +5,7 @@ namespace Modules\Sales\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\BusinessPartner\Models\BusinessPartner;
 
 class CommercialInvoice extends Model
 {
@@ -27,7 +28,7 @@ class CommercialInvoice extends Model
         parent::boot();
         static::creating(function (CommercialInvoice $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -43,7 +44,6 @@ class CommercialInvoice extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\BusinessPartner\Models\BusinessPartner::class, 'customer_id');
+        return $this->belongsTo(BusinessPartner::class, 'customer_id');
     }
 }
-

@@ -26,4 +26,3 @@ class WarehouseTransferRepository extends BaseRepository
             ->get();
     }
 }
-

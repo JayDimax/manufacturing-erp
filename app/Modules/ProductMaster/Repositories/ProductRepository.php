@@ -22,4 +22,3 @@ class ProductRepository extends BaseRepository
         return $this->model->where('product_type', $type)->get();
     }
 }
-

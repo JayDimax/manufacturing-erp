@@ -20,6 +20,7 @@ class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
         $roles = $this->roleService->getPaginated();
+
         return view('admin.roles.index', compact('roles'));
     }
 
@@ -27,6 +28,7 @@ class RoleController extends Controller
     {
         $this->authorize('create', Role::class);
         $permissions = $this->roleService->getGroupedPermissions();
+
         return view('admin.roles.create', compact('permissions'));
     }
 
@@ -49,6 +51,7 @@ class RoleController extends Controller
         $this->authorize('update', $role);
         $permissions = $this->roleService->getGroupedPermissions();
         $rolePermissions = $role->permissions->pluck('id')->toArray();
+
         return view('admin.roles.edit', compact('role', 'permissions', 'rolePermissions'));
     }
 
@@ -71,8 +74,8 @@ class RoleController extends Controller
         $role = $this->roleService->findById($id);
         $this->authorize('delete', $role);
         $this->roleService->delete($role);
+
         return redirect()->route('admin.roles.index')
             ->with('success', 'Role deleted successfully.');
     }
 }
-

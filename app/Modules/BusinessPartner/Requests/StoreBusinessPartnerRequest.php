@@ -29,4 +29,3 @@ class StoreBusinessPartnerRequest extends FormRequest
         ];
     }
 }
-

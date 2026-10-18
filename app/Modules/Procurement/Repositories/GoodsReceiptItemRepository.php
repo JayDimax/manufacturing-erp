@@ -17,4 +17,3 @@ class GoodsReceiptItemRepository extends BaseRepository
         return $this->model->where('goods_receipt_id', $goodsReceiptId)->get();
     }
 }
-

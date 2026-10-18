@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use Modules\Accounting\Controllers\AccountingEventController;
+use Modules\Accounting\Controllers\AccountMappingController;
+use Modules\Accounting\Controllers\PostingQueueController;
 use Modules\Administration\Controllers\AdminDashboardController;
 use Modules\Administration\Controllers\BranchController;
 use Modules\Administration\Controllers\CompanyController;
@@ -12,37 +15,31 @@ use Modules\Administration\Controllers\WarehouseController;
 use Modules\BusinessPartner\Controllers\BusinessPartnerController;
 use Modules\BusinessPartner\Controllers\ContactPersonController;
 use Modules\BusinessPartner\Controllers\PaymentTermController;
-use Modules\Procurement\Controllers\GoodsReceiptController;
-use Modules\Procurement\Controllers\PurchaseOrderController;
-use Modules\Procurement\Controllers\PurchaseRequestController;
-use Modules\Procurement\Controllers\SupplierReturnController;
 use Modules\Inventory\Controllers\InventoryAdjustmentController;
 use Modules\Inventory\Controllers\InventoryController;
 use Modules\Inventory\Controllers\InventoryTransferController;
 use Modules\Manufacturing\Controllers\BillOfMaterialController;
 use Modules\Manufacturing\Controllers\ManufacturingOrderController;
 use Modules\Manufacturing\Controllers\ProductionController;
+use Modules\Procurement\Controllers\GoodsReceiptController;
+use Modules\Procurement\Controllers\PurchaseOrderController;
+use Modules\Procurement\Controllers\PurchaseRequestController;
+use Modules\Procurement\Controllers\SupplierReturnController;
 use Modules\ProductMaster\Controllers\ProductCategoryController;
 use Modules\ProductMaster\Controllers\ProductController;
 use Modules\ProductMaster\Controllers\ProductSpecificationController;
 use Modules\ProductMaster\Controllers\UnitOfMeasureController;
-use Modules\QualityControl\Controllers\QualityInspectionController;
-use Modules\QualityControl\Controllers\NonConformanceController;
 use Modules\QualityControl\Controllers\CorrectiveActionController;
+use Modules\QualityControl\Controllers\NonConformanceController;
+use Modules\QualityControl\Controllers\QualityInspectionController;
+use Modules\Reporting\Controllers\ReportController;
+use Modules\Sales\Controllers\ExportOrderController;
+use Modules\Sales\Controllers\SalesOrderController;
+use Modules\Sales\Controllers\ShipmentController;
+use Modules\Warehouse\Controllers\DispatchController;
+use Modules\Warehouse\Controllers\PickingController;
 use Modules\Warehouse\Controllers\PutawayController;
 use Modules\Warehouse\Controllers\WarehouseTransferController;
-use Modules\Warehouse\Controllers\PickingController;
-use Modules\Warehouse\Controllers\DispatchController;
-
-use Modules\Sales\Controllers\SalesOrderController;
-use Modules\Sales\Controllers\ExportOrderController;
-use Modules\Sales\Controllers\ShipmentController;
-
-use Modules\Accounting\Controllers\AccountingEventController;
-use Modules\Accounting\Controllers\PostingQueueController;
-use Modules\Accounting\Controllers\AccountMappingController;
-
-use Modules\Reporting\Controllers\ReportController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -271,7 +268,7 @@ Route::middleware('auth')->group(function () {
                 ->name('dispatch.cancel');
         });
 
-// Sales & Export Module
+        // Sales & Export Module
         Route::prefix('sales')->name('sales.')->group(function () {
             // Sales Orders
             Route::resource('sales-orders', SalesOrderController::class);
@@ -324,7 +321,7 @@ Route::middleware('auth')->group(function () {
             });
         });
 
-// Accounting Module
+        // Accounting Module
         Route::prefix('accounting')->name('accounting.')->group(function () {
             // Accounting Events
             Route::resource('events', AccountingEventController::class)

@@ -32,4 +32,3 @@ class ContactPersonPolicy
         return $user->can('business-partner-delete');
     }
 }
-

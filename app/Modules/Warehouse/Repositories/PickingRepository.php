@@ -40,4 +40,3 @@ class PickingRepository extends BaseRepository
             ->get();
     }
 }
-

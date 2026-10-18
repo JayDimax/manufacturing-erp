@@ -31,6 +31,7 @@ class StockCardRepository extends BaseRepository
         } else {
             $query->whereNull('batch_number');
         }
+
         return $query->first();
     }
 
@@ -56,4 +57,3 @@ class StockCardRepository extends BaseRepository
             ->get();
     }
 }
-

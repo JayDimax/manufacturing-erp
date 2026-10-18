@@ -32,4 +32,3 @@ class DepartmentPolicy
         return $user->can('department-delete');
     }
 }
-

@@ -2,28 +2,27 @@
 
 namespace Modules\Reporting\Services;
 
-use Modules\Procurement\Models\PurchaseRequest;
-use Modules\Procurement\Models\PurchaseOrder;
-use Modules\Procurement\Models\GoodsReceipt;
-use Modules\Procurement\Models\SupplierReturn;
+use Illuminate\Support\Facades\DB;
+use Modules\Accounting\Models\AccountingEvent;
+use Modules\Accounting\Models\PostingQueue;
+use Modules\Inventory\Models\InventoryAdjustment;
 use Modules\Inventory\Models\InventoryMovement;
 use Modules\Inventory\Models\StockCard;
-use Modules\Inventory\Models\InventoryAdjustment;
 use Modules\Inventory\Models\StockReservation;
 use Modules\Manufacturing\Models\ManufacturingOrder;
 use Modules\Manufacturing\Models\ProductionOutput;
 use Modules\Manufacturing\Models\WasteRecord;
-use Modules\Manufacturing\Models\MaterialIssue;
-use Modules\QualityControl\Models\QualityInspection;
+use Modules\Procurement\Models\GoodsReceipt;
+use Modules\Procurement\Models\PurchaseOrder;
+use Modules\Procurement\Models\PurchaseRequest;
+use Modules\Procurement\Models\SupplierReturn;
 use Modules\QualityControl\Models\NonConformance;
-use Modules\Warehouse\Models\Putaway;
-use Modules\Warehouse\Models\Picking;
-use Modules\Warehouse\Models\Dispatch;
-use Modules\Sales\Models\SalesOrder;
+use Modules\QualityControl\Models\QualityInspection;
 use Modules\Sales\Models\ExportOrder;
-use Modules\Accounting\Models\AccountingEvent;
-use Modules\Accounting\Models\PostingQueue;
-use Illuminate\Support\Facades\DB;
+use Modules\Sales\Models\SalesOrder;
+use Modules\Warehouse\Models\Dispatch;
+use Modules\Warehouse\Models\Picking;
+use Modules\Warehouse\Models\Putaway;
 
 class ReportService
 {
@@ -32,9 +31,15 @@ class ReportService
     public function procurementSummary(array $filters = []): array
     {
         $query = PurchaseRequest::query();
-        if (!empty($filters['date_from'])) $query->whereDate('created_at', '>=', $filters['date_from']);
-        if (!empty($filters['date_to'])) $query->whereDate('created_at', '<=', $filters['date_to']);
-        if (!empty($filters['status'])) $query->where('status', $filters['status']);
+        if (! empty($filters['date_from'])) {
+            $query->whereDate('created_at', '>=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $query->whereDate('created_at', '<=', $filters['date_to']);
+        }
+        if (! empty($filters['status'])) {
+            $query->where('status', $filters['status']);
+        }
 
         return [
             'total_purchase_requests' => PurchaseRequest::count(),
@@ -54,9 +59,15 @@ class ReportService
     public function inventorySummary(array $filters = []): array
     {
         $movementQuery = InventoryMovement::query();
-        if (!empty($filters['date_from'])) $movementQuery->whereDate('created_at', '>=', $filters['date_from']);
-        if (!empty($filters['date_to'])) $movementQuery->whereDate('created_at', '<=', $filters['date_to']);
-        if (!empty($filters['product_id'])) $movementQuery->where('product_id', $filters['product_id']);
+        if (! empty($filters['date_from'])) {
+            $movementQuery->whereDate('created_at', '>=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $movementQuery->whereDate('created_at', '<=', $filters['date_to']);
+        }
+        if (! empty($filters['product_id'])) {
+            $movementQuery->where('product_id', $filters['product_id']);
+        }
 
         return [
             'total_movements' => InventoryMovement::count(),
@@ -78,9 +89,15 @@ class ReportService
     public function manufacturingSummary(array $filters = []): array
     {
         $moQuery = ManufacturingOrder::query();
-        if (!empty($filters['date_from'])) $moQuery->whereDate('created_at', '>=', $filters['date_from']);
-        if (!empty($filters['date_to'])) $moQuery->whereDate('created_at', '<=', $filters['date_to']);
-        if (!empty($filters['status'])) $moQuery->where('status', $filters['status']);
+        if (! empty($filters['date_from'])) {
+            $moQuery->whereDate('created_at', '>=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $moQuery->whereDate('created_at', '<=', $filters['date_to']);
+        }
+        if (! empty($filters['status'])) {
+            $moQuery->where('status', $filters['status']);
+        }
 
         $totalOutput = ProductionOutput::sum('quantity_produced');
         $totalWaste = WasteRecord::sum('quantity');
@@ -108,9 +125,15 @@ class ReportService
     public function qualitySummary(array $filters = []): array
     {
         $inspectionQuery = QualityInspection::query();
-        if (!empty($filters['date_from'])) $inspectionQuery->whereDate('created_at', '>=', $filters['date_from']);
-        if (!empty($filters['date_to'])) $inspectionQuery->whereDate('created_at', '<=', $filters['date_to']);
-        if (!empty($filters['status'])) $inspectionQuery->where('status', $filters['status']);
+        if (! empty($filters['date_from'])) {
+            $inspectionQuery->whereDate('created_at', '>=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $inspectionQuery->whereDate('created_at', '<=', $filters['date_to']);
+        }
+        if (! empty($filters['status'])) {
+            $inspectionQuery->where('status', $filters['status']);
+        }
 
         $totalInspections = QualityInspection::count();
         $passed = QualityInspection::where('status', 'approved')->count();
@@ -150,9 +173,15 @@ class ReportService
     public function salesSummary(array $filters = []): array
     {
         $soQuery = SalesOrder::query();
-        if (!empty($filters['date_from'])) $soQuery->whereDate('created_at', '>=', $filters['date_from']);
-        if (!empty($filters['date_to'])) $soQuery->whereDate('created_at', '<=', $filters['date_to']);
-        if (!empty($filters['status'])) $soQuery->where('status', $filters['status']);
+        if (! empty($filters['date_from'])) {
+            $soQuery->whereDate('created_at', '>=', $filters['date_from']);
+        }
+        if (! empty($filters['date_to'])) {
+            $soQuery->whereDate('created_at', '<=', $filters['date_to']);
+        }
+        if (! empty($filters['status'])) {
+            $soQuery->where('status', $filters['status']);
+        }
 
         return [
             'total_sales_orders' => SalesOrder::count(),

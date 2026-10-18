@@ -21,4 +21,3 @@ class StoreUnitOfMeasureRequest extends FormRequest
         ];
     }
 }
-

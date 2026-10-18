@@ -40,4 +40,3 @@ class DispatchRepository extends BaseRepository
             ->get();
     }
 }
-

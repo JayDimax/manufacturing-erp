@@ -25,12 +25,11 @@ class StoreExportOrderRequest extends FormRequest
             'container_number' => 'nullable|string|max:50',
             'seal_number' => 'nullable|string|max:50',
             'notes' => 'nullable|string|max:1000',
-            'items' => 'required|array|min:1',
-            'items.*.sales_order_id' => 'required|exists:sales_orders,id',
-            'items.*.sales_order_item_id' => 'required|exists:sales_order_items,id',
-            'items.*.product_id' => 'required|exists:products,id',
-            'items.*.quantity' => 'required|numeric|min:0.0001',
+            'items' => 'nullable|array',
+            'items.*.sales_order_id' => 'nullable|exists:sales_orders,id',
+            'items.*.sales_order_item_id' => 'nullable|exists:sales_order_items,id',
+            'items.*.product_id' => 'required_with:items|exists:products,id',
+            'items.*.quantity' => 'required_with:items|numeric|min:0.0001',
         ];
     }
 }
-

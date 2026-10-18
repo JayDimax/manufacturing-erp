@@ -8,4 +8,3 @@ enum SupplierReturnStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
-

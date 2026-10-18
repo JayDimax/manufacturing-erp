@@ -30,10 +30,11 @@ class BusinessPartnerService
 
     public function create(array $data): BusinessPartner
     {
-        if (!isset($data['partner_code'])) {
+        if (! isset($data['partner_code'])) {
             $prefix = $this->getPrefixForType($data['partner_type'] ?? 'supplier');
             $data['partner_code'] = $this->numberSeriesService->generateNext($prefix);
         }
+
         return $this->businessPartnerRepository->create($data);
     }
 
@@ -57,7 +58,7 @@ class BusinessPartnerService
         return $this->businessPartnerRepository->findByType($type);
     }
 
-public function getSuppliers()
+    public function getSuppliers()
     {
         return $this->businessPartnerRepository->findByType('supplier');
     }
@@ -80,4 +81,3 @@ public function getSuppliers()
         return $prefixes[$type] ?? 'PARTNER';
     }
 }
-

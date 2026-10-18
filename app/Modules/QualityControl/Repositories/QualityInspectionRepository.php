@@ -62,4 +62,3 @@ class QualityInspectionRepository extends BaseRepository
             ->get();
     }
 }
-

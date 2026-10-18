@@ -2,9 +2,12 @@
 
 namespace Modules\Warehouse\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
 
 class WarehouseTransfer extends Model
 {
@@ -33,7 +36,7 @@ class WarehouseTransfer extends Model
         parent::boot();
         static::creating(function (WarehouseTransfer $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -44,7 +47,7 @@ class WarehouseTransfer extends Model
 
     public function sourceWarehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class, 'source_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'source_warehouse_id');
     }
 
     public function sourceLocation()
@@ -54,7 +57,7 @@ class WarehouseTransfer extends Model
 
     public function destinationWarehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class, 'destination_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'destination_warehouse_id');
     }
 
     public function destinationLocation()
@@ -64,12 +67,11 @@ class WarehouseTransfer extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }
-

@@ -3,6 +3,7 @@
 namespace Modules\Warehouse\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\ProductMaster\Models\Product;
 
 class PickingItem extends Model
 {
@@ -25,7 +26,7 @@ class PickingItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function storageLocation()
@@ -33,4 +34,3 @@ class PickingItem extends Model
         return $this->belongsTo(StorageLocation::class);
     }
 }
-

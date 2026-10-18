@@ -14,7 +14,7 @@ class UpdateInventoryAdjustmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'adjustment_number' => 'nullable|string|max:50|unique:inventory_adjustments,adjustment_number,' . $this->route('inventory_adjustment')?->id,
+            'adjustment_number' => 'nullable|string|max:50|unique:inventory_adjustments,adjustment_number,'.$this->route('inventory_adjustment')?->id,
             'warehouse_id' => 'required|exists:warehouses,id',
             'reason' => 'required|string|in:physical_count,damage,spoilage,expired,missing,found,other',
             'description' => 'nullable|string|max:1000',

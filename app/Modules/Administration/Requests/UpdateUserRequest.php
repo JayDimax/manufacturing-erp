@@ -14,9 +14,10 @@ class UpdateUserRequest extends FormRequest
     public function rules(): array
     {
         $userId = $this->route('user');
+
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $userId,
+            'email' => 'required|email|max:255|unique:users,email,'.$userId,
             'password' => 'nullable|string|min:8',
             'branch_id' => 'nullable|exists:branches,id',
             'department_id' => 'nullable|exists:departments,id',
@@ -26,4 +27,3 @@ class UpdateUserRequest extends FormRequest
         ];
     }
 }
-

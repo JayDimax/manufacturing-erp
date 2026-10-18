@@ -19,4 +19,3 @@ class StoreProductSpecificationRequest extends FormRequest
         ];
     }
 }
-

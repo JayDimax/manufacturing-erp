@@ -27,10 +27,10 @@ class NonConformanceService
 
     public function create(array $data): NonConformance
     {
-        if (!isset($data['nc_number'])) {
+        if (! isset($data['nc_number'])) {
             $data['nc_number'] = $this->numberSeriesService->generateNext('CORRECTIVE_ACTION');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'open';
         }
 
@@ -55,6 +55,7 @@ class NonConformanceService
     public function delete(NonConformance $nc): bool
     {
         $this->auditService->logDelete('non_conformance', $nc->nc_number, $nc->toArray());
+
         return $this->ncRepository->delete($nc);
     }
 
@@ -97,4 +98,3 @@ class NonConformanceService
         return $this->ncRepository->findByInspection($inspectionId);
     }
 }
-

@@ -17,4 +17,3 @@ class SupplierReturnItemRepository extends BaseRepository
         return $this->model->where('supplier_return_id', $supplierReturnId)->get();
     }
 }
-

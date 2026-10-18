@@ -2,6 +2,7 @@
 
 namespace Modules\QualityControl\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -27,7 +28,7 @@ class NonConformance extends Model
         parent::boot();
         static::creating(function (NonConformance $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -48,7 +49,7 @@ class NonConformance extends Model
 
     public function assignedTo()
     {
-        return $this->belongsTo(\App\Models\User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     public function correctiveActions()
@@ -56,4 +57,3 @@ class NonConformance extends Model
         return $this->hasMany(CorrectiveAction::class, 'non_conformance_id');
     }
 }
-

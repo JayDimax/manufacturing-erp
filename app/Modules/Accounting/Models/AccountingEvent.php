@@ -2,9 +2,11 @@
 
 namespace Modules\Accounting\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Branch;
 
 class AccountingEvent extends Model
 {
@@ -31,7 +33,7 @@ class AccountingEvent extends Model
         parent::boot();
         static::creating(function (AccountingEvent $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -42,7 +44,7 @@ class AccountingEvent extends Model
 
     public function branch()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Branch::class);
+        return $this->belongsTo(Branch::class);
     }
 
     public function postingQueue()
@@ -52,6 +54,6 @@ class AccountingEvent extends Model
 
     public function creator()
     {
-        return $this->belongsTo(\App\Models\User::class, 'created_by');
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

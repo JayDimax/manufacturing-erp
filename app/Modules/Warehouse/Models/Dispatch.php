@@ -2,9 +2,12 @@
 
 namespace Modules\Warehouse\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
 
 class Dispatch extends Model
 {
@@ -37,7 +40,7 @@ class Dispatch extends Model
         parent::boot();
         static::creating(function (Dispatch $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -48,7 +51,7 @@ class Dispatch extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function reference()
@@ -58,17 +61,16 @@ class Dispatch extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function confirmer()
     {
-        return $this->belongsTo(\App\Models\User::class, 'confirmed_by');
+        return $this->belongsTo(User::class, 'confirmed_by');
     }
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 }
-

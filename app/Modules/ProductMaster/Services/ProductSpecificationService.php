@@ -25,6 +25,7 @@ class ProductSpecificationService
     public function create(Product $product, array $data): ProductSpecification
     {
         $data['product_id'] = $product->id;
+
         return $this->specificationRepository->create($data);
     }
 
@@ -38,4 +39,3 @@ class ProductSpecificationService
         return $this->specificationRepository->delete($spec);
     }
 }
-

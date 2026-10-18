@@ -4,9 +4,10 @@ namespace Modules\Warehouse\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Warehouse\Enums\WarehouseTransferStatus;
+use Modules\Warehouse\Models\StorageLocation;
 use Modules\Warehouse\Models\WarehouseTransfer;
 use Modules\Warehouse\Repositories\WarehouseTransferRepository;
-use Modules\Warehouse\Enums\WarehouseTransferStatus;
 
 class WarehouseTransferService
 {
@@ -23,18 +24,27 @@ class WarehouseTransferService
 
     public function create(array $data): WarehouseTransfer
     {
-        if (!isset($data['transfer_number'])) {
+        if (! isset($data['transfer_number'])) {
             $data['transfer_number'] = $this->numberSeriesService->generateNext('WAREHOUSE_TRANSFER');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = WarehouseTransferStatus::Draft->value;
         }
-        if (!isset($data['transfer_date'])) {
+        if (! isset($data['transfer_date'])) {
             $data['transfer_date'] = now();
+        }
+        if (empty($data['source_location_id'])) {
+            $data['source_location_id'] = StorageLocation::where('warehouse_id', $data['source_warehouse_id'] ?? null)->value('id')
+                ?? StorageLocation::value('id') ?? 1;
+        }
+        if (empty($data['destination_location_id'])) {
+            $data['destination_location_id'] = StorageLocation::where('warehouse_id', $data['destination_warehouse_id'] ?? null)->value('id')
+                ?? StorageLocation::value('id') ?? 1;
         }
 
         $transfer = $this->transferRepository->create($data);
         $this->auditService->logCreate('warehouse', $transfer->transfer_number, $data);
+
         return $transfer;
     }
 
@@ -45,12 +55,14 @@ class WarehouseTransferService
         if ($result) {
             $this->auditService->logUpdate('warehouse', $transfer->transfer_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(WarehouseTransfer $transfer): bool
     {
         $this->auditService->logDelete('warehouse', $transfer->transfer_number, $transfer->toArray());
+
         return $this->transferRepository->delete($transfer);
     }
 
@@ -63,6 +75,7 @@ class WarehouseTransferService
         if ($result) {
             $this->auditService->logApprove('warehouse', $transfer->transfer_number);
         }
+
         return $result;
     }
 
@@ -73,6 +86,7 @@ class WarehouseTransferService
         if ($result) {
             $this->auditService->logComplete('warehouse', $transfer->transfer_number);
         }
+
         return $result;
     }
 
@@ -83,7 +97,7 @@ class WarehouseTransferService
         if ($result) {
             $this->auditService->logCancel('warehouse', $transfer->transfer_number);
         }
+
         return $result;
     }
 }
-

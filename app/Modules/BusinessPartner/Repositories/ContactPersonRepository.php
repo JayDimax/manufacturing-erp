@@ -17,4 +17,3 @@ class ContactPersonRepository extends BaseRepository
         return $this->model->where('business_partner_id', $partnerId)->get();
     }
 }
-

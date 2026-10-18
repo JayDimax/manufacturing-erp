@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Models\NumberSeries;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class NumberSeriesService
 {
@@ -25,7 +24,7 @@ class NumberSeriesService
                 ->lockForUpdate()
                 ->first();
 
-            if (!$series) {
+            if (! $series) {
                 $series = $this->createDefaultSeries($documentType, $prefix, $branchId);
             }
 
@@ -61,14 +60,14 @@ class NumberSeriesService
     {
         return DB::transaction(function () {
             $date = now()->format('Ymd');
-            $key = 'BATCH_' . $date;
+            $key = 'BATCH_'.$date;
 
             $series = NumberSeries::where('document_type', 'BATCH')
                 ->where('prefix', 'BATCH')
                 ->lockForUpdate()
                 ->first();
 
-            if (!$series) {
+            if (! $series) {
                 $series = NumberSeries::create([
                     'document_type' => 'BATCH',
                     'prefix' => 'BATCH',
@@ -161,8 +160,9 @@ class NumberSeriesService
             ->where('branch_id', $branchId)
             ->first();
 
-        if (!$series) {
+        if (! $series) {
             $prefix = $this->getDefaultPrefix($documentType);
+
             return sprintf('%s-%d-%s', $prefix, now()->year, '000001');
         }
 
@@ -175,4 +175,3 @@ class NumberSeriesService
         return sprintf('%s-%d-%s', $prefix, $year, str_pad($nextSequence, $padLength, '0', STR_PAD_LEFT));
     }
 }
-

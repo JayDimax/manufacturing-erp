@@ -41,4 +41,3 @@ class CorrectiveActionRepository extends BaseRepository
             ->get();
     }
 }
-

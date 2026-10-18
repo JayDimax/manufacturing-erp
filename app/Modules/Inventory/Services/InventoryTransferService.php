@@ -4,10 +4,10 @@ namespace Modules\Inventory\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
-use Modules\Inventory\Models\InventoryTransfer;
-use Modules\Inventory\Repositories\InventoryTransferRepository;
-use Modules\Inventory\Repositories\InventoryTransferItemRepository;
 use Modules\Inventory\Enums\InventoryTransferStatus;
+use Modules\Inventory\Models\InventoryTransfer;
+use Modules\Inventory\Repositories\InventoryTransferItemRepository;
+use Modules\Inventory\Repositories\InventoryTransferRepository;
 
 class InventoryTransferService
 {
@@ -31,10 +31,10 @@ class InventoryTransferService
 
     public function create(array $data): InventoryTransfer
     {
-        if (!isset($data['transfer_number'])) {
+        if (! isset($data['transfer_number'])) {
             $data['transfer_number'] = $this->numberSeriesService->generateNext('STOCK_TRANSFER');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = InventoryTransferStatus::Draft->value;
         }
 
@@ -68,6 +68,7 @@ class InventoryTransferService
     public function delete(InventoryTransfer $transfer): bool
     {
         $this->auditService->logDelete('inventory', $transfer->transfer_number, $transfer->toArray());
+
         return $this->transferRepository->delete($transfer);
     }
 

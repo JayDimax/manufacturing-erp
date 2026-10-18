@@ -42,4 +42,3 @@ class PickingPolicy
         return $user->can('picking-create');
     }
 }
-

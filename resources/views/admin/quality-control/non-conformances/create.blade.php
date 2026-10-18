@@ -9,10 +9,12 @@
         <form action="{{ route('admin.quality-control.non-conformances.store') }}" method="POST">
             @csrf
 
-            <input type="hidden" name="quality_inspection_id" value="{{ request('quality_inspection_id', old('quality_inspection_id')) }}">
-
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <x-input label="Quality Inspection ID" name="quality_inspection_id_display" id="quality_inspection_id_display" :value="request('quality_inspection_id', old('quality_inspection_id'))" help="Enter inspection ID or pass via URL parameter" />
+                @if(isset($inspections) && $inspections->count() > 0)
+                    <x-select label="Quality Inspection" name="quality_inspection_id" id="quality_inspection_id" :required="true" :options="$inspections->mapWithKeys(fn($i) => [$i->id => $i->inspection_number . ' (' . ($i->product->product_name ?? 'N/A') . ')'])->toArray()" :selected="request('quality_inspection_id', old('quality_inspection_id'))" />
+                @else
+                    <x-input label="Quality Inspection ID" name="quality_inspection_id" id="quality_inspection_id" type="number" :required="true" :value="request('quality_inspection_id', old('quality_inspection_id'))" help="Enter inspection ID" />
+                @endif
                 <x-select label="Defect Type" name="defect_type_id" id="defect_type_id" :options="$defectTypes->pluck('name', 'id')->toArray()" :selected="old('defect_type_id')" />
             </div>
 

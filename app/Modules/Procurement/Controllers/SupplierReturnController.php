@@ -3,14 +3,16 @@
 namespace Modules\Procurement\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+use Modules\Administration\Services\WarehouseService;
 use Modules\Procurement\Models\SupplierReturn;
 use Modules\Procurement\Requests\StoreSupplierReturnRequest;
 use Modules\Procurement\Requests\UpdateSupplierReturnRequest;
-use Modules\Procurement\Services\SupplierReturnService;
 use Modules\Procurement\Services\GoodsReceiptService;
-use Modules\Administration\Services\WarehouseService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
+use Modules\Procurement\Services\SupplierReturnService;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\ProductMaster\Services\UnitOfMeasureService;
 
 class SupplierReturnController extends Controller
 {
@@ -18,13 +20,14 @@ class SupplierReturnController extends Controller
         protected SupplierReturnService $supplierReturnService,
         protected GoodsReceiptService $goodsReceiptService,
         protected WarehouseService $warehouseService,
-        protected \Modules\ProductMaster\Services\ProductService $productService,
-        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
+        protected ProductService $productService,
+        protected UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
     {
         $supplierReturns = $this->supplierReturnService->getPaginated();
+
         return view('admin.supplier-returns.index', compact('supplierReturns'));
     }
 
@@ -42,12 +45,14 @@ class SupplierReturnController extends Controller
             'failed_quality_inspection' => 'Failed Quality Inspection',
             'other' => 'Other',
         ];
+
         return view('admin.supplier-returns.create', compact('goodsReceipts', 'warehouses', 'reasons', 'products', 'uoms'));
     }
 
     public function store(StoreSupplierReturnRequest $request): RedirectResponse
     {
         $this->supplierReturnService->create($request->validated());
+
         return redirect()->route('admin.supplier-returns.index')
             ->with('success', 'Supplier return created successfully.');
     }
@@ -55,6 +60,7 @@ class SupplierReturnController extends Controller
     public function show(SupplierReturn $supplierReturn): View
     {
         $supplierReturn->load(['goodsReceipt.purchaseOrder', 'warehouse', 'items.product', 'items.uom']);
+
         return view('admin.supplier-returns.show', compact('supplierReturn'));
     }
 
@@ -73,24 +79,12 @@ class SupplierReturnController extends Controller
             'other' => 'Other',
         ];
         $supplierReturn->load(['items.product', 'items.uom']);
-        return view('admin.supplier-returns.edit', compact('supplierReturn', 'goodsReceipts', 'warehouses', 'reasons', 'products', 'uoms'));
-    }
-        $goodsReceipts = $this->goodsReceiptService->getPaginated();
-        $warehouses = $this->warehouseService->getAll();
-        $reasons = [
-            'damaged_packaging' => 'Damaged Packaging',
-            'spoiled_goods' => 'Spoiled Goods',
-            'incorrect_quantity' => 'Incorrect Quantity',
-            'wrong_item' => 'Wrong Item',
-            'failed_quality_inspection' => 'Failed Quality Inspection',
-            'other' => 'Other',
-        ];
-        return view('admin.supplier-returns.edit', compact('supplierReturn', 'goodsReceipts', 'warehouses', 'reasons'));
     }
 
     public function update(UpdateSupplierReturnRequest $request, SupplierReturn $supplierReturn): RedirectResponse
     {
         $this->supplierReturnService->update($supplierReturn, $request->validated());
+
         return redirect()->route('admin.supplier-returns.index')
             ->with('success', 'Supplier return updated successfully.');
     }
@@ -98,6 +92,7 @@ class SupplierReturnController extends Controller
     public function destroy(SupplierReturn $supplierReturn): RedirectResponse
     {
         $this->supplierReturnService->delete($supplierReturn);
+
         return redirect()->route('admin.supplier-returns.index')
             ->with('success', 'Supplier return deleted successfully.');
     }
@@ -105,6 +100,7 @@ class SupplierReturnController extends Controller
     public function complete(SupplierReturn $supplierReturn): RedirectResponse
     {
         $this->supplierReturnService->complete($supplierReturn);
+
         return redirect()->route('admin.supplier-returns.index')
             ->with('success', 'Supplier return completed successfully.');
     }
@@ -112,8 +108,8 @@ class SupplierReturnController extends Controller
     public function cancel(SupplierReturn $supplierReturn): RedirectResponse
     {
         $this->supplierReturnService->cancel($supplierReturn);
+
         return redirect()->route('admin.supplier-returns.index')
             ->with('success', 'Supplier return cancelled successfully.');
     }
 }
-

@@ -5,7 +5,6 @@ namespace Modules\Administration\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Modules\Administration\Requests\StoreUserRequest;
 use Modules\Administration\Requests\UpdateUserRequest;
@@ -27,6 +26,7 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
         $users = $this->userService->getPaginated();
+
         return view('admin.users.index', compact('users'));
     }
 
@@ -36,6 +36,7 @@ class UserController extends Controller
         $branches = $this->branchService->getActiveBranches();
         $departments = $this->departmentService->getActiveDepartments();
         $roles = $this->roleService->getAllRoles();
+
         return view('admin.users.create', compact('branches', 'departments', 'roles'));
     }
 
@@ -48,7 +49,7 @@ class UserController extends Controller
 
         $user = $this->userService->create($data);
 
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             $user->syncRoles($roles);
         }
 
@@ -60,6 +61,7 @@ class UserController extends Controller
     {
         $user = $this->userService->findById($id);
         $this->authorize('view', $user);
+
         return view('admin.users.show', compact('user'));
     }
 
@@ -71,6 +73,7 @@ class UserController extends Controller
         $departments = $this->departmentService->getActiveDepartments();
         $roles = $this->roleService->getAllRoles();
         $userRoles = $user->roles->pluck('id')->toArray();
+
         return view('admin.users.edit', compact('user', 'branches', 'departments', 'roles', 'userRoles'));
     }
 
@@ -89,7 +92,7 @@ class UserController extends Controller
 
         $this->userService->update($user, $data);
 
-        if (!empty($roles)) {
+        if (! empty($roles)) {
             $user->syncRoles($roles);
         }
 
@@ -102,8 +105,8 @@ class UserController extends Controller
         $user = $this->userService->findById($id);
         $this->authorize('delete', $user);
         $this->userService->delete($user);
+
         return redirect()->route('admin.users.index')
             ->with('success', 'User deleted successfully.');
     }
 }
-

@@ -23,7 +23,7 @@ class DefectType extends Model
         parent::boot();
         static::creating(function (DefectType $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -37,4 +37,3 @@ class DefectType extends Model
         return $this->hasMany(NonConformance::class, 'defect_type_id');
     }
 }
-

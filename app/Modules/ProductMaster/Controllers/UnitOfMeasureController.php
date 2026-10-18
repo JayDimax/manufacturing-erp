@@ -3,12 +3,12 @@
 namespace Modules\ProductMaster\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Modules\ProductMaster\Models\UnitOfMeasure;
 use Modules\ProductMaster\Requests\StoreUnitOfMeasureRequest;
 use Modules\ProductMaster\Requests\UpdateUnitOfMeasureRequest;
 use Modules\ProductMaster\Services\UnitOfMeasureService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class UnitOfMeasureController extends Controller
 {
@@ -19,6 +19,7 @@ class UnitOfMeasureController extends Controller
     public function index(): View
     {
         $unitsOfMeasure = $this->uomService->getPaginated();
+
         return view('admin.units-of-measure.index', compact('unitsOfMeasure'));
     }
 
@@ -30,6 +31,7 @@ class UnitOfMeasureController extends Controller
     public function store(StoreUnitOfMeasureRequest $request): RedirectResponse
     {
         $this->uomService->create($request->validated());
+
         return redirect()->route('admin.units-of-measure.index')
             ->with('success', 'Unit of measure created successfully.');
     }
@@ -42,6 +44,7 @@ class UnitOfMeasureController extends Controller
     public function update(UpdateUnitOfMeasureRequest $request, UnitOfMeasure $unitsOfMeasure): RedirectResponse
     {
         $this->uomService->update($unitsOfMeasure, $request->validated());
+
         return redirect()->route('admin.units-of-measure.index')
             ->with('success', 'Unit of measure updated successfully.');
     }
@@ -49,8 +52,8 @@ class UnitOfMeasureController extends Controller
     public function destroy(UnitOfMeasure $unitsOfMeasure): RedirectResponse
     {
         $this->uomService->delete($unitsOfMeasure);
+
         return redirect()->route('admin.units-of-measure.index')
             ->with('success', 'Unit of measure deleted successfully.');
     }
 }
-

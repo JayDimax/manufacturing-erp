@@ -34,4 +34,3 @@ return new class extends Migration
         Schema::dropIfExists('goods_receipt_items');
     }
 };
-

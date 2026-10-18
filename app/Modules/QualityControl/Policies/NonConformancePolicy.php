@@ -37,4 +37,3 @@ class NonConformancePolicy
         return $user->can('non-conformance-create');
     }
 }
-

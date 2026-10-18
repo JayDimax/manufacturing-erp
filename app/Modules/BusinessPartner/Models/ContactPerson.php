@@ -34,7 +34,7 @@ class ContactPerson extends Model
         parent::boot();
         static::creating(function (ContactPerson $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -48,4 +48,3 @@ class ContactPerson extends Model
         return $this->belongsTo(BusinessPartner::class);
     }
 }
-

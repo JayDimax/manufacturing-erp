@@ -30,9 +30,10 @@ class WarehouseService
 
     public function create(array $data): Warehouse
     {
-        if (!isset($data['warehouse_code'])) {
+        if (! isset($data['warehouse_code'])) {
             $data['warehouse_code'] = $this->numberSeriesService->generateNext('WAREHOUSE');
         }
+
         return $this->warehouseRepository->create($data);
     }
 
@@ -51,4 +52,3 @@ class WarehouseService
         return $this->warehouseRepository->findActive();
     }
 }
-

@@ -5,6 +5,7 @@ namespace Modules\Procurement\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Department;
 
 class PurchaseRequest extends Model
 {
@@ -37,7 +38,7 @@ class PurchaseRequest extends Model
         parent::boot();
         static::creating(function (PurchaseRequest $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -48,7 +49,7 @@ class PurchaseRequest extends Model
 
     public function department()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Department::class);
+        return $this->belongsTo(Department::class);
     }
 
     public function items()
@@ -61,4 +62,3 @@ class PurchaseRequest extends Model
         return $this->hasMany(PurchaseOrder::class);
     }
 }
-

@@ -42,4 +42,3 @@ class QualityInspectionPolicy
         return $user->can('inspection-approve');
     }
 }
-

@@ -3,13 +3,13 @@
 namespace Modules\BusinessPartner\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Modules\BusinessPartner\Models\BusinessPartner;
 use Modules\BusinessPartner\Models\ContactPerson;
 use Modules\BusinessPartner\Requests\StoreContactPersonRequest;
 use Modules\BusinessPartner\Requests\UpdateContactPersonRequest;
 use Modules\BusinessPartner\Services\ContactPersonService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class ContactPersonController extends Controller
 {
@@ -20,6 +20,7 @@ class ContactPersonController extends Controller
     public function index(BusinessPartner $businessPartner): View
     {
         $contactPersons = $this->contactPersonService->getByPartner($businessPartner->id);
+
         return view('admin.contact-persons.index', compact('businessPartner', 'contactPersons'));
     }
 
@@ -31,6 +32,7 @@ class ContactPersonController extends Controller
     public function store(StoreContactPersonRequest $request, BusinessPartner $businessPartner): RedirectResponse
     {
         $this->contactPersonService->create($businessPartner->id, $request->validated());
+
         return redirect()->route('admin.business-partners.contact-persons.index', $businessPartner)
             ->with('success', 'Contact person created successfully.');
     }
@@ -43,6 +45,7 @@ class ContactPersonController extends Controller
     public function update(UpdateContactPersonRequest $request, BusinessPartner $businessPartner, ContactPerson $contactPerson): RedirectResponse
     {
         $this->contactPersonService->update($contactPerson, $request->validated());
+
         return redirect()->route('admin.business-partners.contact-persons.index', $businessPartner)
             ->with('success', 'Contact person updated successfully.');
     }
@@ -50,6 +53,7 @@ class ContactPersonController extends Controller
     public function destroy(BusinessPartner $businessPartner, ContactPerson $contactPerson): RedirectResponse
     {
         $this->contactPersonService->delete($contactPerson);
+
         return redirect()->route('admin.business-partners.contact-persons.index', $businessPartner)
             ->with('success', 'Contact person deleted successfully.');
     }

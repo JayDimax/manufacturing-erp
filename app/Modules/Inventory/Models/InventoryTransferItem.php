@@ -4,6 +4,8 @@ namespace Modules\Inventory\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\ProductMaster\Models\Product;
+use Modules\ProductMaster\Models\UnitOfMeasure;
 
 class InventoryTransferItem extends Model
 {
@@ -33,7 +35,7 @@ class InventoryTransferItem extends Model
         parent::boot();
         static::creating(function (InventoryTransferItem $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -46,12 +48,11 @@ class InventoryTransferItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function uom()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\UnitOfMeasure::class, 'uom_id');
+        return $this->belongsTo(UnitOfMeasure::class, 'uom_id');
     }
 }
-

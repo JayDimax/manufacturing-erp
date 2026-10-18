@@ -29,6 +29,7 @@ class UserService
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
+
         return $this->userRepository->create($data);
     }
 
@@ -37,6 +38,7 @@ class UserService
         if (isset($data['password'])) {
             $data['password'] = Hash::make($data['password']);
         }
+
         return $this->userRepository->update($user, $data);
     }
 
@@ -48,14 +50,14 @@ class UserService
     public function toggleActive(User $user): bool
     {
         return $this->userRepository->update($user, [
-            'is_active' => !$user->is_active,
+            'is_active' => ! $user->is_active,
         ]);
     }
 
     public function generateTemporaryPassword(): string
     {
         $chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+
         return substr(str_shuffle($chars), 0, 12);
     }
 }
-

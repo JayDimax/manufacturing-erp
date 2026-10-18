@@ -32,9 +32,8 @@ return new class extends Migration
             $table->dropForeign(['department_id']);
             $table->dropColumn([
                 'uuid', 'branch_id', 'department_id', 'is_active', 'is_locked',
-                'last_login_at', 'created_by', 'updated_by', 'deleted_at', 'deleted_by'
+                'last_login_at', 'created_by', 'updated_by', 'deleted_at', 'deleted_by',
             ]);
         });
     }
 };
-

@@ -2,8 +2,12 @@
 
 namespace Modules\Manufacturing\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
+use Modules\ProductMaster\Models\UnitOfMeasure;
 
 class ProductionOutput extends Model
 {
@@ -42,7 +46,7 @@ class ProductionOutput extends Model
         parent::boot();
         static::creating(function (ProductionOutput $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -55,22 +59,22 @@ class ProductionOutput extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function uom()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\UnitOfMeasure::class, 'uom_id');
+        return $this->belongsTo(UnitOfMeasure::class, 'uom_id');
     }
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function inspector()
     {
-        return $this->belongsTo(\App\Models\User::class, 'inspected_by');
+        return $this->belongsTo(User::class, 'inspected_by');
     }
 
     public function wasteRecords()

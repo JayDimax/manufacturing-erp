@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Administration\Models\Company;
 use Modules\Administration\Requests\StoreCompanyRequest;
 use Modules\Administration\Services\CompanyService;
 
@@ -18,6 +19,7 @@ class CompanyController extends Controller
     public function index(): View
     {
         $company = $this->companyService->getActive();
+
         return view('admin.company.index', compact('company'));
     }
 
@@ -29,19 +31,21 @@ class CompanyController extends Controller
     public function store(StoreCompanyRequest $request): RedirectResponse
     {
         $this->companyService->create($request->validated());
+
         return redirect()->route('admin.company.index')
             ->with('success', 'Company created successfully.');
     }
 
     public function edit(?int $id = null): View
     {
-        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: \Modules\Administration\Models\Company::first());
+        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: Company::first());
+
         return view('admin.company.edit', compact('company'));
     }
 
     public function update(Request $request, ?int $id = null): RedirectResponse
     {
-        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: \Modules\Administration\Models\Company::first());
+        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: Company::first());
 
         $validated = $request->validate([
             'company_name' => 'required|string|max:255',
@@ -57,14 +61,14 @@ class CompanyController extends Controller
             'timezone' => 'nullable|string|max:100',
         ]);
 
-        if (isset($validated['email']) && !isset($validated['contact_email'])) {
+        if (isset($validated['email']) && ! isset($validated['contact_email'])) {
             $validated['contact_email'] = $validated['email'];
         }
-        if (isset($validated['phone']) && !isset($validated['contact_phone'])) {
+        if (isset($validated['phone']) && ! isset($validated['contact_phone'])) {
             $validated['contact_phone'] = $validated['phone'];
         }
 
-        if (!$company) {
+        if (! $company) {
             $this->companyService->create($validated);
         } else {
             $this->companyService->update($company, $validated);
@@ -74,4 +78,3 @@ class CompanyController extends Controller
             ->with('success', 'Company updated successfully.');
     }
 }
-

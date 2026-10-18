@@ -17,8 +17,8 @@ class StorePickingRequest extends FormRequest
             'picking_number' => 'nullable|string|max:50|unique:pickings,picking_number',
             'warehouse_id' => 'required|exists:warehouses,id',
             'picking_type' => 'required|string|in:production,shipment,transfer',
-            'reference_type' => 'required|string',
-            'reference_id' => 'required|integer',
+            'reference_type' => 'nullable|string',
+            'reference_id' => 'nullable|integer',
             'reference_number' => 'nullable|string|max:50',
             'picking_date' => 'required|date',
             'assigned_to' => 'nullable|exists:users,id',
@@ -40,4 +40,3 @@ class StorePickingRequest extends FormRequest
         ];
     }
 }
-

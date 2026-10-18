@@ -4,9 +4,10 @@ namespace Modules\Procurement\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Procurement\Models\GoodsReceiptItem;
 use Modules\Procurement\Models\SupplierReturn;
-use Modules\Procurement\Repositories\SupplierReturnRepository;
 use Modules\Procurement\Repositories\SupplierReturnItemRepository;
+use Modules\Procurement\Repositories\SupplierReturnRepository;
 
 class SupplierReturnService
 {
@@ -29,10 +30,10 @@ class SupplierReturnService
 
     public function create(array $data): SupplierReturn
     {
-        if (!isset($data['supplier_return_number'])) {
+        if (! isset($data['supplier_return_number'])) {
             $data['supplier_return_number'] = $this->numberSeriesService->generateNext('SR');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
         }
 
@@ -43,6 +44,12 @@ class SupplierReturnService
 
         foreach ($items as $item) {
             $item['supplier_return_id'] = $supplierReturn->id;
+            if (empty($item['goods_receipt_item_id']) && ! empty($supplierReturn->goods_receipt_id)) {
+                $item['goods_receipt_item_id'] = GoodsReceiptItem::where('goods_receipt_id', $supplierReturn->goods_receipt_id)
+                    ->where('product_id', $item['product_id'] ?? null)
+                    ->value('id')
+                    ?? GoodsReceiptItem::where('goods_receipt_id', $supplierReturn->goods_receipt_id)->value('id');
+            }
             $this->supplierReturnItemRepository->create($item);
         }
 
@@ -63,6 +70,12 @@ class SupplierReturnService
             $supplierReturn->items()->delete();
             foreach ($items as $item) {
                 $item['supplier_return_id'] = $supplierReturn->id;
+                if (empty($item['goods_receipt_item_id']) && ! empty($supplierReturn->goods_receipt_id)) {
+                    $item['goods_receipt_item_id'] = GoodsReceiptItem::where('goods_receipt_id', $supplierReturn->goods_receipt_id)
+                        ->where('product_id', $item['product_id'] ?? null)
+                        ->value('id')
+                        ?? GoodsReceiptItem::where('goods_receipt_id', $supplierReturn->goods_receipt_id)->value('id');
+                }
                 $this->supplierReturnItemRepository->create($item);
             }
         }
@@ -77,6 +90,7 @@ class SupplierReturnService
     public function delete(SupplierReturn $supplierReturn): bool
     {
         $this->auditService->logDelete('procurement', $supplierReturn->supplier_return_number, $supplierReturn->toArray());
+
         return $this->supplierReturnRepository->delete($supplierReturn);
     }
 
@@ -114,4 +128,3 @@ class SupplierReturnService
         return $this->supplierReturnRepository->findByGoodsReceipt($goodsReceiptId);
     }
 }
-

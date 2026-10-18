@@ -34,7 +34,7 @@ class Branch extends Model
         parent::boot();
         static::creating(function (Branch $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -53,4 +53,3 @@ class Branch extends Model
         return $this->belongsTo(Company::class);
     }
 }
-

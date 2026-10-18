@@ -11,4 +11,3 @@ enum ShipmentStatus: string
     case InTransit = 'in_transit';
     case Delivered = 'delivered';
 }
-

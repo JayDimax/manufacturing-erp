@@ -5,6 +5,7 @@ namespace Modules\Warehouse\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class StorageLocation extends Model
 {
@@ -28,7 +29,7 @@ class StorageLocation extends Model
         parent::boot();
         static::creating(function (StorageLocation $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -39,7 +40,7 @@ class StorageLocation extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function putaways()
@@ -52,4 +53,3 @@ class StorageLocation extends Model
         return $query->where('is_active', true);
     }
 }
-

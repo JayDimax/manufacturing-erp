@@ -4,6 +4,7 @@ namespace Modules\QualityControl\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Modules\ProductMaster\Models\Product;
 
 class QualityChecklist extends Model
 {
@@ -23,7 +24,7 @@ class QualityChecklist extends Model
         parent::boot();
         static::creating(function (QualityChecklist $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -39,7 +40,7 @@ class QualityChecklist extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function items()
@@ -47,4 +48,3 @@ class QualityChecklist extends Model
         return $this->hasMany(QualityChecklistItem::class, 'quality_checklist_id');
     }
 }
-

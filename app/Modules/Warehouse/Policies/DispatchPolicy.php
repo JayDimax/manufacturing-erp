@@ -52,4 +52,3 @@ class DispatchPolicy
         return $user->can('dispatch-create');
     }
 }
-

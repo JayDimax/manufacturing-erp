@@ -32,7 +32,7 @@ class ProductCategory extends Model
         parent::boot();
         static::creating(function (ProductCategory $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -46,4 +46,3 @@ class ProductCategory extends Model
         return $this->hasMany(Product::class, 'category_id');
     }
 }
-

@@ -27,4 +27,3 @@ class InventoryAdjustmentRepository extends BaseRepository
         return $this->model->where('status', 'pending_approval')->orderBy('created_at', 'asc')->get();
     }
 }
-

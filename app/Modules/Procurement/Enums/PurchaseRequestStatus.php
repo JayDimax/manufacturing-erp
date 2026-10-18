@@ -11,4 +11,3 @@ enum PurchaseRequestStatus: string
     case ConvertedToPo = 'converted_to_po';
     case Cancelled = 'cancelled';
 }
-

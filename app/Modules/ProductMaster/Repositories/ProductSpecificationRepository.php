@@ -17,4 +17,3 @@ class ProductSpecificationRepository extends BaseRepository
         return $this->model->where('product_id', $productId)->get();
     }
 }
-

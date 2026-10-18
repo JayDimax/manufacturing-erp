@@ -3,6 +3,7 @@
 namespace Modules\Manufacturing\Repositories;
 
 use App\Repositories\BaseRepository;
+use Carbon\Carbon;
 use Modules\Manufacturing\Models\WasteRecord;
 
 class WasteRecordRepository extends BaseRepository
@@ -26,7 +27,7 @@ class WasteRecordRepository extends BaseRepository
             ->get();
     }
 
-    public function findHighWaste(\Carbon\Carbon $since = null)
+    public function findHighWaste(?Carbon $since = null)
     {
         $query = $this->model->selectRaw('waste_type, SUM(quantity) as total_waste')
             ->groupBy('waste_type')

@@ -76,7 +76,7 @@ class InventoryService
      */
     public function recordMovement(array $data): InventoryMovement
     {
-        if (!isset($data['movement_number'])) {
+        if (! isset($data['movement_number'])) {
             $data['movement_number'] = $this->numberSeriesService->generateNext('INVENTORY_MOVEMENT');
         }
 
@@ -104,7 +104,7 @@ class InventoryService
             $data['batch_number'] ?? null
         );
 
-        if (!$card) {
+        if (! $card) {
             $card = $this->stockCardRepository->create([
                 'product_id' => $data['product_id'],
                 'warehouse_id' => $data['warehouse_id'],
@@ -149,4 +149,3 @@ class InventoryService
         return $card;
     }
 }
-

@@ -32,4 +32,3 @@ class WarehousePolicy
         return $user->can('warehouse-delete');
     }
 }
-

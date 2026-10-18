@@ -32,4 +32,3 @@ class PaymentTermPolicy
         return $user->can('business-partner-delete');
     }
 }
-

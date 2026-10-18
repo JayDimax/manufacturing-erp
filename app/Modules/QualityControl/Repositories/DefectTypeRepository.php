@@ -27,4 +27,3 @@ class DefectTypeRepository extends BaseRepository
             ->get();
     }
 }
-

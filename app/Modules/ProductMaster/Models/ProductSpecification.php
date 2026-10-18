@@ -23,7 +23,7 @@ class ProductSpecification extends Model
         parent::boot();
         static::creating(function (ProductSpecification $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -37,4 +37,3 @@ class ProductSpecification extends Model
         return $this->belongsTo(Product::class);
     }
 }
-

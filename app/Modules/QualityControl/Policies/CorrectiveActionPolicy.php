@@ -42,4 +42,3 @@ class CorrectiveActionPolicy
         return $user->can('corrective-action-create');
     }
 }
-

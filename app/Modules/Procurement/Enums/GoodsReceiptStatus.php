@@ -8,4 +8,3 @@ enum GoodsReceiptStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
-

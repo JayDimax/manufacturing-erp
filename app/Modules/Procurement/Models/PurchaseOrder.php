@@ -5,6 +5,8 @@ namespace Modules\Procurement\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\BusinessPartner\Models\BusinessPartner;
+use Modules\BusinessPartner\Models\PaymentTerm;
 
 class PurchaseOrder extends Model
 {
@@ -37,7 +39,7 @@ class PurchaseOrder extends Model
         parent::boot();
         static::creating(function (PurchaseOrder $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -53,12 +55,12 @@ class PurchaseOrder extends Model
 
     public function supplier()
     {
-        return $this->belongsTo(\Modules\BusinessPartner\Models\BusinessPartner::class, 'supplier_id');
+        return $this->belongsTo(BusinessPartner::class, 'supplier_id');
     }
 
     public function paymentTerm()
     {
-        return $this->belongsTo(\Modules\BusinessPartner\Models\PaymentTerm::class, 'payment_term_id');
+        return $this->belongsTo(PaymentTerm::class, 'payment_term_id');
     }
 
     public function items()
@@ -71,4 +73,3 @@ class PurchaseOrder extends Model
         return $this->hasMany(GoodsReceipt::class);
     }
 }
-

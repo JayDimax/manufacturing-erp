@@ -5,8 +5,8 @@ namespace Modules\Procurement\Services;
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
 use Modules\Procurement\Models\PurchaseRequest;
-use Modules\Procurement\Repositories\PurchaseRequestRepository;
 use Modules\Procurement\Repositories\PurchaseRequestItemRepository;
+use Modules\Procurement\Repositories\PurchaseRequestRepository;
 
 class PurchaseRequestService
 {
@@ -29,11 +29,17 @@ class PurchaseRequestService
 
     public function create(array $data): PurchaseRequest
     {
-        if (!isset($data['request_number'])) {
+        if (! isset($data['request_number'])) {
             $data['request_number'] = $this->numberSeriesService->generateNext('PR');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
+        }
+        if (! isset($data['request_date'])) {
+            $data['request_date'] = now();
+        }
+        if (! isset($data['requested_by'])) {
+            $data['requested_by'] = auth()->user()->name ?? 'System';
         }
 
         $items = $data['items'] ?? [];
@@ -43,6 +49,9 @@ class PurchaseRequestService
 
         foreach ($items as $item) {
             $item['purchase_request_id'] = $purchaseRequest->id;
+            if (! isset($item['quantity']) && isset($item['quantity_requested'])) {
+                $item['quantity'] = $item['quantity_requested'];
+            }
             $this->purchaseRequestItemRepository->create($item);
         }
 
@@ -63,6 +72,9 @@ class PurchaseRequestService
             $purchaseRequest->items()->delete();
             foreach ($items as $item) {
                 $item['purchase_request_id'] = $purchaseRequest->id;
+                if (! isset($item['quantity']) && isset($item['quantity_requested'])) {
+                    $item['quantity'] = $item['quantity_requested'];
+                }
                 $this->purchaseRequestItemRepository->create($item);
             }
         }
@@ -77,6 +89,7 @@ class PurchaseRequestService
     public function delete(PurchaseRequest $purchaseRequest): bool
     {
         $this->auditService->logDelete('procurement', $purchaseRequest->request_number, $purchaseRequest->toArray());
+
         return $this->purchaseRequestRepository->delete($purchaseRequest);
     }
 
@@ -138,4 +151,3 @@ class PurchaseRequestService
         return $this->purchaseRequestRepository->findByStatus($status);
     }
 }
-

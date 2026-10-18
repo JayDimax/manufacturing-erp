@@ -9,4 +9,3 @@ enum WarehouseTransferStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
-

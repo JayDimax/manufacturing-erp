@@ -17,8 +17,8 @@ class StoreDispatchRequest extends FormRequest
             'dispatch_number' => 'nullable|string|max:50|unique:dispatches,dispatch_number',
             'warehouse_id' => 'required|exists:warehouses,id',
             'dispatch_type' => 'required|string|in:sales,export,transfer',
-            'reference_type' => 'required|string',
-            'reference_id' => 'required|integer',
+            'reference_type' => 'nullable|string',
+            'reference_id' => 'nullable|integer',
             'reference_number' => 'nullable|string|max:50',
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|numeric|min:0.0001',
@@ -32,4 +32,3 @@ class StoreDispatchRequest extends FormRequest
         ];
     }
 }
-

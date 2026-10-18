@@ -19,4 +19,3 @@ class QualityChecklistItemRepository extends BaseRepository
             ->get();
     }
 }
-

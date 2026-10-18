@@ -32,4 +32,3 @@ class RolePolicy
         return $user->can('role-delete');
     }
 }
-

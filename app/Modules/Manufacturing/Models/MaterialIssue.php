@@ -2,9 +2,11 @@
 
 namespace Modules\Manufacturing\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class MaterialIssue extends Model
 {
@@ -37,7 +39,7 @@ class MaterialIssue extends Model
         parent::boot();
         static::creating(function (MaterialIssue $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -53,7 +55,7 @@ class MaterialIssue extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function items()
@@ -63,11 +65,11 @@ class MaterialIssue extends Model
 
     public function issuer()
     {
-        return $this->belongsTo(\App\Models\User::class, 'issued_by');
+        return $this->belongsTo(User::class, 'issued_by');
     }
 
     public function receiver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'received_by');
+        return $this->belongsTo(User::class, 'received_by');
     }
 }

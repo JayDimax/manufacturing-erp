@@ -4,10 +4,10 @@ namespace Modules\Sales\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
-use Modules\Sales\Models\SalesOrder;
-use Modules\Sales\Repositories\SalesOrderRepository;
-use Modules\Sales\Repositories\SalesOrderItemRepository;
 use Modules\Sales\Enums\SalesOrderStatus;
+use Modules\Sales\Models\SalesOrder;
+use Modules\Sales\Repositories\SalesOrderItemRepository;
+use Modules\Sales\Repositories\SalesOrderRepository;
 
 class SalesOrderService
 {
@@ -23,18 +23,23 @@ class SalesOrderService
         return $this->salesOrderRepository->paginate($perPage);
     }
 
+    public function findById(int $id): ?SalesOrder
+    {
+        return $this->salesOrderRepository->find($id);
+    }
+
     public function create(array $data): SalesOrder
     {
-        if (!isset($data['sales_order_number'])) {
+        if (! isset($data['sales_order_number'])) {
             $data['sales_order_number'] = $this->numberSeriesService->generateNext('SalesOrder');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = SalesOrderStatus::Draft->value;
         }
-        if (!isset($data['order_date'])) {
+        if (! isset($data['order_date'])) {
             $data['order_date'] = now();
         }
-        if (!isset($data['currency'])) {
+        if (! isset($data['currency'])) {
             $data['currency'] = 'IDR';
         }
 
@@ -50,7 +55,7 @@ class SalesOrderService
 
         $salesOrder = $this->salesOrderRepository->create($data);
 
-        if (!empty($items)) {
+        if (! empty($items)) {
             foreach ($items as $item) {
                 $item['sales_order_id'] = $salesOrder->id;
                 $this->salesOrderItemRepository->create($item);
@@ -58,6 +63,7 @@ class SalesOrderService
         }
 
         $this->auditService->logCreate('sales', $salesOrder->sales_order_number, $data);
+
         return $salesOrder;
     }
 
@@ -89,18 +95,21 @@ class SalesOrderService
         if ($result) {
             $this->auditService->logUpdate('sales', $salesOrder->sales_order_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(SalesOrder $salesOrder): bool
     {
         $this->auditService->logDelete('sales', $salesOrder->sales_order_number, $salesOrder->toArray());
+
         return $this->salesOrderRepository->delete($salesOrder);
     }
 
     public function submit(SalesOrder $salesOrder): bool
     {
         $salesOrder->status = SalesOrderStatus::Confirmed->value;
+
         return $salesOrder->save();
     }
 
@@ -113,18 +122,21 @@ class SalesOrderService
         if ($result) {
             $this->auditService->logApprove('sales', $salesOrder->sales_order_number);
         }
+
         return $result;
     }
 
     public function markReadyForShipment(SalesOrder $salesOrder): bool
     {
         $salesOrder->status = SalesOrderStatus::ReadyForShipment->value;
+
         return $salesOrder->save();
     }
 
     public function markShipped(SalesOrder $salesOrder): bool
     {
         $salesOrder->status = SalesOrderStatus::Shipped->value;
+
         return $salesOrder->save();
     }
 
@@ -135,6 +147,7 @@ class SalesOrderService
         if ($result) {
             $this->auditService->log('close', 'sales', $salesOrder->sales_order_number);
         }
+
         return $result;
     }
 
@@ -145,7 +158,7 @@ class SalesOrderService
         if ($result) {
             $this->auditService->logCancel('sales', $salesOrder->sales_order_number);
         }
+
         return $result;
     }
 }
-

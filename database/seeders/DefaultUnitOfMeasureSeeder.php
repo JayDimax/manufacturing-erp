@@ -38,4 +38,3 @@ class DefaultUnitOfMeasureSeeder extends Seeder
         }
     }
 }
-

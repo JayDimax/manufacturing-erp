@@ -32,4 +32,3 @@ class BusinessPartnerPolicy
         return $user->can('business-partner-delete');
     }
 }
-

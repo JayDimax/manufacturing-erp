@@ -5,8 +5,8 @@ namespace Modules\Procurement\Services;
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
 use Modules\Procurement\Models\PurchaseOrder;
-use Modules\Procurement\Repositories\PurchaseOrderRepository;
 use Modules\Procurement\Repositories\PurchaseOrderItemRepository;
+use Modules\Procurement\Repositories\PurchaseOrderRepository;
 
 class PurchaseOrderService
 {
@@ -29,11 +29,14 @@ class PurchaseOrderService
 
     public function create(array $data): PurchaseOrder
     {
-        if (!isset($data['purchase_order_number'])) {
+        if (! isset($data['purchase_order_number'])) {
             $data['purchase_order_number'] = $this->numberSeriesService->generateNext('PO');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'draft';
+        }
+        if (! isset($data['expected_delivery_date'])) {
+            $data['expected_delivery_date'] = now()->addDays(7);
         }
 
         $items = $data['items'] ?? [];
@@ -43,7 +46,7 @@ class PurchaseOrderService
 
         foreach ($items as $item) {
             $item['purchase_order_id'] = $purchaseOrder->id;
-            if (!isset($item['total_cost'])) {
+            if (! isset($item['total_cost'])) {
                 $item['total_cost'] = ($item['quantity_ordered'] ?? 0) * ($item['unit_cost'] ?? 0);
             }
             $this->purchaseOrderItemRepository->create($item);
@@ -66,7 +69,7 @@ class PurchaseOrderService
             $purchaseOrder->items()->delete();
             foreach ($items as $item) {
                 $item['purchase_order_id'] = $purchaseOrder->id;
-                if (!isset($item['total_cost'])) {
+                if (! isset($item['total_cost'])) {
                     $item['total_cost'] = ($item['quantity_ordered'] ?? 0) * ($item['unit_cost'] ?? 0);
                 }
                 $this->purchaseOrderItemRepository->create($item);
@@ -83,6 +86,7 @@ class PurchaseOrderService
     public function delete(PurchaseOrder $purchaseOrder): bool
     {
         $this->auditService->logDelete('procurement', $purchaseOrder->purchase_order_number, $purchaseOrder->toArray());
+
         return $this->purchaseOrderRepository->delete($purchaseOrder);
     }
 
@@ -144,4 +148,3 @@ class PurchaseOrderService
         return $this->purchaseOrderRepository->findByStatus($status);
     }
 }
-

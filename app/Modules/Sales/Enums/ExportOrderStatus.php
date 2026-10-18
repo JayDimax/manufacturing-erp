@@ -12,4 +12,3 @@ enum ExportOrderStatus: string
     case Delivered = 'delivered';
     case Cancelled = 'cancelled';
 }
-

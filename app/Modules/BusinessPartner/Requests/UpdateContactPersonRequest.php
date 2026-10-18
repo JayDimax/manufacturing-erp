@@ -22,4 +22,3 @@ class UpdateContactPersonRequest extends FormRequest
         ];
     }
 }
-

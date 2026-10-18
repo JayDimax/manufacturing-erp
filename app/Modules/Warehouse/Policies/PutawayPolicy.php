@@ -42,4 +42,3 @@ class PutawayPolicy
         return $user->can('putaway-create');
     }
 }
-

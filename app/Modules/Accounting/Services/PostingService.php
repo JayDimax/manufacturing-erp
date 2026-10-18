@@ -4,12 +4,12 @@ namespace Modules\Accounting\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Accounting\Enums\AccountingEventStatus;
 use Modules\Accounting\Models\AccountingEvent;
 use Modules\Accounting\Models\PostingQueue;
 use Modules\Accounting\Repositories\AccountingEventRepository;
-use Modules\Accounting\Repositories\PostingQueueRepository;
 use Modules\Accounting\Repositories\JournalMappingRepository;
-use Modules\Accounting\Enums\AccountingEventStatus;
+use Modules\Accounting\Repositories\PostingQueueRepository;
 
 class PostingService
 {
@@ -49,16 +49,18 @@ class PostingService
 
         $queue = $this->postingQueueRepository->create($data);
         $this->auditService->log('enqueue', 'accounting', $queue->queue_number);
+
         return $queue;
     }
 
     public function process(PostingQueue $queue): bool
     {
         $event = $queue->accountingEvent;
-        if (!$event) {
+        if (! $event) {
             $queue->status = 'failed';
             $queue->error_message = 'Accounting event not found';
             $queue->save();
+
             return false;
         }
 
@@ -76,6 +78,7 @@ class PostingService
             $queue->save();
 
             $this->auditService->log('post', 'accounting', $queue->queue_number);
+
             return true;
         } catch (\Exception $e) {
             $queue->status = 'failed';
@@ -84,6 +87,7 @@ class PostingService
             $queue->save();
 
             $this->eventService->markFailed($event, $e->getMessage());
+
             return false;
         }
     }
@@ -138,7 +142,7 @@ class PostingService
 
         // Validate journal mapping exists
         $mapping = $this->journalMappingRepository->findByTransactionType($event->transaction_type);
-        if (!$mapping) {
+        if (! $mapping) {
             throw new \Exception("No journal mapping found for transaction type: {$event->transaction_type}");
         }
 

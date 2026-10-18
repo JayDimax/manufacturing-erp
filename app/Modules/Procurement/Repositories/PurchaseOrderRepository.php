@@ -32,4 +32,3 @@ class PurchaseOrderRepository extends BaseRepository
         return $this->model->where('supplier_id', $supplierId)->get();
     }
 }
-

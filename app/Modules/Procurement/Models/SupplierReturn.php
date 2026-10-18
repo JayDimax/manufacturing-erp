@@ -5,6 +5,7 @@ namespace Modules\Procurement\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class SupplierReturn extends Model
 {
@@ -35,7 +36,7 @@ class SupplierReturn extends Model
         parent::boot();
         static::creating(function (SupplierReturn $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -51,7 +52,7 @@ class SupplierReturn extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function items()
@@ -59,4 +60,3 @@ class SupplierReturn extends Model
         return $this->hasMany(SupplierReturnItem::class);
     }
 }
-

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -42,7 +43,7 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        $adminRole = \Spatie\Permission\Models\Role::where('name', 'Administrator')->first();
+        $adminRole = Role::where('name', 'Administrator')->first();
         if ($adminRole) {
             $user->assignRole($adminRole);
         }

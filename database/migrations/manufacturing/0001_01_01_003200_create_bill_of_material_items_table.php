@@ -32,4 +32,3 @@ return new class extends Migration
         Schema::dropIfExists('bill_of_material_items');
     }
 };
-

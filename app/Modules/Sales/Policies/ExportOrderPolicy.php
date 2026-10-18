@@ -42,4 +42,3 @@ class ExportOrderPolicy
         return $user->can('export-order-update');
     }
 }
-

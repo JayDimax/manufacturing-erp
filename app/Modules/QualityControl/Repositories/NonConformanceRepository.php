@@ -40,4 +40,3 @@ class NonConformanceRepository extends BaseRepository
             ->get();
     }
 }
-

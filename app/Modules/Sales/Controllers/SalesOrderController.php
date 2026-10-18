@@ -3,14 +3,14 @@
 namespace Modules\Sales\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Sales\Services\SalesOrderService;
-use Modules\Sales\Requests\StoreSalesOrderRequest;
-use Modules\Sales\Requests\UpdateSalesOrderRequest;
-use Modules\Sales\Models\SalesOrder;
-use Modules\BusinessPartner\Services\BusinessPartnerService;
-use Modules\ProductMaster\Services\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\BusinessPartner\Services\BusinessPartnerService;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\Sales\Models\SalesOrder;
+use Modules\Sales\Requests\StoreSalesOrderRequest;
+use Modules\Sales\Requests\UpdateSalesOrderRequest;
+use Modules\Sales\Services\SalesOrderService;
 
 class SalesOrderController extends Controller
 {
@@ -23,6 +23,7 @@ class SalesOrderController extends Controller
     public function index(): View
     {
         $salesOrders = $this->salesOrderService->getPaginated();
+
         return view('admin.sales.sales-orders.index', compact('salesOrders'));
     }
 
@@ -30,12 +31,14 @@ class SalesOrderController extends Controller
     {
         $customers = $this->businessPartnerService->getAllCustomers();
         $products = $this->productService->getAll();
+
         return view('admin.sales.sales-orders.create', compact('customers', 'products'));
     }
 
     public function store(StoreSalesOrderRequest $request): RedirectResponse
     {
         $this->salesOrderService->create($request->validated());
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order created successfully.');
     }
@@ -43,6 +46,7 @@ class SalesOrderController extends Controller
     public function show(SalesOrder $salesOrder): View
     {
         $salesOrder->load(['customer', 'items.product', 'approver']);
+
         return view('admin.sales.sales-orders.show', compact('salesOrder'));
     }
 
@@ -51,12 +55,14 @@ class SalesOrderController extends Controller
         $customers = $this->businessPartnerService->getAllCustomers();
         $products = $this->productService->getAll();
         $salesOrder->load('items');
+
         return view('admin.sales.sales-orders.edit', compact('salesOrder', 'customers', 'products'));
     }
 
     public function update(UpdateSalesOrderRequest $request, SalesOrder $salesOrder): RedirectResponse
     {
         $this->salesOrderService->update($salesOrder, $request->validated());
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order updated successfully.');
     }
@@ -64,6 +70,7 @@ class SalesOrderController extends Controller
     public function destroy(SalesOrder $salesOrder): RedirectResponse
     {
         $this->salesOrderService->delete($salesOrder);
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order deleted successfully.');
     }
@@ -71,6 +78,7 @@ class SalesOrderController extends Controller
     public function submit(SalesOrder $salesOrder): RedirectResponse
     {
         $this->salesOrderService->submit($salesOrder);
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order submitted successfully.');
     }
@@ -78,6 +86,7 @@ class SalesOrderController extends Controller
     public function approve(SalesOrder $salesOrder): RedirectResponse
     {
         $this->salesOrderService->approve($salesOrder);
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order approved successfully.');
     }
@@ -85,8 +94,8 @@ class SalesOrderController extends Controller
     public function cancel(SalesOrder $salesOrder): RedirectResponse
     {
         $this->salesOrderService->cancel($salesOrder);
+
         return redirect()->route('admin.sales.sales-orders.index')
             ->with('success', 'Sales order cancelled.');
     }
 }
-

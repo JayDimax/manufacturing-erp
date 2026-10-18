@@ -27,4 +27,3 @@ class StockReservationRepository extends BaseRepository
             ->get();
     }
 }
-

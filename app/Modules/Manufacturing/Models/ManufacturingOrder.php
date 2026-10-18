@@ -5,7 +5,9 @@ namespace Modules\Manufacturing\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use Modules\Manufacturing\Enums\ManufacturingOrderStatus;
+use Modules\Administration\Models\Warehouse;
+use Modules\ProductMaster\Models\Product;
+use Modules\ProductMaster\Models\UnitOfMeasure;
 
 class ManufacturingOrder extends Model
 {
@@ -49,7 +51,7 @@ class ManufacturingOrder extends Model
         parent::boot();
         static::creating(function (ManufacturingOrder $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -60,7 +62,7 @@ class ManufacturingOrder extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function billOfMaterial()
@@ -70,12 +72,12 @@ class ManufacturingOrder extends Model
 
     public function uom()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\UnitOfMeasure::class, 'uom_id');
+        return $this->belongsTo(UnitOfMeasure::class, 'uom_id');
     }
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function items()

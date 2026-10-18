@@ -14,8 +14,9 @@ class UpdateManufacturingOrderRequest extends FormRequest
     public function rules(): array
     {
         $moId = $this->route('manufacturing_order');
+
         return [
-            'mo_number' => 'nullable|string|max:50|unique:manufacturing_orders,mo_number,' . $moId,
+            'mo_number' => 'nullable|string|max:50|unique:manufacturing_orders,mo_number,'.$moId,
             'product_id' => 'required|exists:products,id',
             'bill_of_material_id' => 'nullable|exists:bill_of_materials,id',
             'bom_version' => 'nullable|string|max:20',

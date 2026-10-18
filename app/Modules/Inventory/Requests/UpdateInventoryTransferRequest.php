@@ -14,7 +14,7 @@ class UpdateInventoryTransferRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'transfer_number' => 'nullable|string|max:50|unique:inventory_transfers,transfer_number,' . $this->route('inventory_transfer')?->id,
+            'transfer_number' => 'nullable|string|max:50|unique:inventory_transfers,transfer_number,'.$this->route('inventory_transfer')?->id,
             'from_warehouse_id' => 'required|exists:warehouses,id|different:to_warehouse_id',
             'to_warehouse_id' => 'required|exists:warehouses,id|different:from_warehouse_id',
             'transfer_date' => 'required|date',

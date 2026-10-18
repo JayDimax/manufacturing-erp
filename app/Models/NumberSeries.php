@@ -34,7 +34,7 @@ class NumberSeries extends Model
         parent::boot();
         static::creating(function (NumberSeries $model) {
             $model->uuid = (string) Str::uuid();
-            if (auth()->check() && !$model->created_by) {
+            if (auth()->check() && ! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -45,4 +45,3 @@ class NumberSeries extends Model
         });
     }
 }
-

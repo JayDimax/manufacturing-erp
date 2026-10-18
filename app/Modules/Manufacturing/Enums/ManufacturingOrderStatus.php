@@ -12,4 +12,3 @@ enum ManufacturingOrderStatus: string
     case Completed = 'completed';
     case Cancelled = 'cancelled';
 }
-

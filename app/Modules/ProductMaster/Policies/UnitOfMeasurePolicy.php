@@ -32,4 +32,3 @@ class UnitOfMeasurePolicy
         return $user->can('uom-delete');
     }
 }
-

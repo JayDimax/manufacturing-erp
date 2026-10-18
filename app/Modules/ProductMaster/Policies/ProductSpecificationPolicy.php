@@ -32,4 +32,3 @@ class ProductSpecificationPolicy
         return $user->can('product-update');
     }
 }
-

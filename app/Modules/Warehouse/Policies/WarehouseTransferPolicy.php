@@ -47,4 +47,3 @@ class WarehouseTransferPolicy
         return $user->can('inventory-transfer');
     }
 }
-

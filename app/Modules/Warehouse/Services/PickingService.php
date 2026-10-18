@@ -4,11 +4,11 @@ namespace Modules\Warehouse\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
-use Modules\Warehouse\Models\Picking;
-use Modules\Warehouse\Repositories\PickingRepository;
-use Modules\Warehouse\Repositories\PickingItemRepository;
-use Modules\Warehouse\Repositories\StorageLocationRepository;
 use Modules\Inventory\Services\InventoryService;
+use Modules\Warehouse\Models\Picking;
+use Modules\Warehouse\Repositories\PickingItemRepository;
+use Modules\Warehouse\Repositories\PickingRepository;
+use Modules\Warehouse\Repositories\StorageLocationRepository;
 
 class PickingService
 {
@@ -26,13 +26,24 @@ class PickingService
         return $this->pickingRepository->paginate($perPage);
     }
 
+    public function findById(int $id): ?Picking
+    {
+        return $this->pickingRepository->find($id);
+    }
+
     public function create(array $data): Picking
     {
-        if (!isset($data['picking_number'])) {
+        if (! isset($data['picking_number'])) {
             $data['picking_number'] = $this->numberSeriesService->generateNext('PICKING');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'pending';
+        }
+        if (empty($data['reference_type'])) {
+            $data['reference_type'] = $data['picking_type'] ?? 'manual';
+        }
+        if (! isset($data['reference_id'])) {
+            $data['reference_id'] = 0;
         }
 
         $picking = $this->pickingRepository->create($data);
@@ -46,24 +57,28 @@ class PickingService
         }
 
         $this->auditService->logCreate('warehouse', $picking->picking_number, $data);
+
         return $picking;
     }
 
     public function delete(Picking $picking): bool
     {
         $this->auditService->logDelete('warehouse', $picking->picking_number, $picking->toArray());
+
         return $this->pickingRepository->delete($picking);
     }
 
     public function assign(Picking $picking, int $userId): bool
     {
         $picking->assigned_to = $userId;
+
         return $picking->save();
     }
 
     public function start(Picking $picking): bool
     {
         $picking->status = 'in_progress';
+
         return $picking->save();
     }
 
@@ -75,6 +90,7 @@ class PickingService
         if ($result) {
             $this->auditService->logComplete('warehouse', $picking->picking_number);
         }
+
         return $result;
     }
 
@@ -85,7 +101,7 @@ class PickingService
         if ($result) {
             $this->auditService->logCancel('warehouse', $picking->picking_number);
         }
+
         return $result;
     }
 }
-

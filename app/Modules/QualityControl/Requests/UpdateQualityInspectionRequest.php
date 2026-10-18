@@ -29,4 +29,3 @@ class UpdateQualityInspectionRequest extends FormRequest
         ];
     }
 }
-

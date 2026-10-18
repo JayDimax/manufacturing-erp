@@ -2,6 +2,7 @@
 
 namespace Modules\Accounting\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -36,6 +37,6 @@ class PostingQueue extends Model
 
     public function processor()
     {
-        return $this->belongsTo(\App\Models\User::class, 'processed_by');
+        return $this->belongsTo(User::class, 'processed_by');
     }
 }

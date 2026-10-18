@@ -30,9 +30,10 @@ class ProductService
 
     public function create(array $data): Product
     {
-        if (!isset($data['product_code'])) {
+        if (! isset($data['product_code'])) {
             $data['product_code'] = $this->numberSeriesService->generateNext('PRD');
         }
+
         return $this->productRepository->create($data);
     }
 
@@ -56,4 +57,3 @@ class ProductService
         return $this->productRepository->findByType($type);
     }
 }
-

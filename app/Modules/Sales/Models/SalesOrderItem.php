@@ -3,6 +3,7 @@
 namespace Modules\Sales\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Modules\ProductMaster\Models\Product;
 
 class SalesOrderItem extends Model
 {
@@ -28,7 +29,6 @@ class SalesOrderItem extends Model
 
     public function product()
     {
-        return $this->belongsTo(\Modules\ProductMaster\Models\Product::class);
+        return $this->belongsTo(Product::class);
     }
 }
-

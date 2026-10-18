@@ -32,7 +32,7 @@ class UserPolicy
         if ($user->id === $targetUser->id) {
             return false;
         }
+
         return $user->can('user-delete');
     }
 }
-

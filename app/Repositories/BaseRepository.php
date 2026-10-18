@@ -2,8 +2,9 @@
 
 namespace App\Repositories;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 abstract class BaseRepository
@@ -133,13 +134,14 @@ abstract class BaseRepository
         foreach ($conditions as $field => $value) {
             $query->where($field, $value);
         }
+
         return $query->exists();
     }
 
     /**
      * Begin a new query.
      */
-    public function newQuery(): \Illuminate\Database\Eloquent\Builder
+    public function newQuery(): Builder
     {
         return $this->model->newQuery();
     }
@@ -160,4 +162,3 @@ abstract class BaseRepository
         return $this->model->withTrashed()->get();
     }
 }
-

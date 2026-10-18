@@ -4,9 +4,9 @@ namespace Modules\Warehouse\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
+use Modules\Warehouse\Enums\DispatchStatus;
 use Modules\Warehouse\Models\Dispatch;
 use Modules\Warehouse\Repositories\DispatchRepository;
-use Modules\Warehouse\Enums\DispatchStatus;
 
 class DispatchService
 {
@@ -21,17 +21,29 @@ class DispatchService
         return $this->dispatchRepository->paginate($perPage);
     }
 
+    public function findById(int $id): ?Dispatch
+    {
+        return $this->dispatchRepository->find($id);
+    }
+
     public function create(array $data): Dispatch
     {
-        if (!isset($data['dispatch_number'])) {
+        if (! isset($data['dispatch_number'])) {
             $data['dispatch_number'] = $this->numberSeriesService->generateNext('DISPATCH');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = DispatchStatus::Draft->value;
+        }
+        if (empty($data['reference_type'])) {
+            $data['reference_type'] = $data['dispatch_type'] ?? 'manual';
+        }
+        if (! isset($data['reference_id'])) {
+            $data['reference_id'] = 0;
         }
 
         $dispatch = $this->dispatchRepository->create($data);
         $this->auditService->logCreate('warehouse', $dispatch->dispatch_number, $data);
+
         return $dispatch;
     }
 
@@ -42,18 +54,21 @@ class DispatchService
         if ($result) {
             $this->auditService->logUpdate('warehouse', $dispatch->dispatch_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(Dispatch $dispatch): bool
     {
         $this->auditService->logDelete('warehouse', $dispatch->dispatch_number, $dispatch->toArray());
+
         return $this->dispatchRepository->delete($dispatch);
     }
 
     public function pack(Dispatch $dispatch): bool
     {
         $dispatch->status = DispatchStatus::Packed->value;
+
         return $dispatch->save();
     }
 
@@ -61,6 +76,7 @@ class DispatchService
     {
         $dispatch->status = DispatchStatus::Loaded->value;
         $dispatch->loaded_at = now();
+
         return $dispatch->save();
     }
 
@@ -73,6 +89,7 @@ class DispatchService
         if ($result) {
             $this->auditService->log('dispatch', 'warehouse', $dispatch->dispatch_number);
         }
+
         return $result;
     }
 
@@ -83,6 +100,7 @@ class DispatchService
         if ($result) {
             $this->auditService->logCancel('warehouse', $dispatch->dispatch_number);
         }
+
         return $result;
     }
 
@@ -94,7 +112,7 @@ class DispatchService
         if ($result) {
             $this->auditService->logApprove('warehouse', $dispatch->dispatch_number);
         }
+
         return $result;
     }
 }
-

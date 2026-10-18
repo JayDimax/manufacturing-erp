@@ -26,4 +26,3 @@ class PackingRepository extends BaseRepository
             ->get();
     }
 }
-

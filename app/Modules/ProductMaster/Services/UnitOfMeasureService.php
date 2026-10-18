@@ -46,4 +46,3 @@ class UnitOfMeasureService
         return $this->uomRepository->findActive();
     }
 }
-

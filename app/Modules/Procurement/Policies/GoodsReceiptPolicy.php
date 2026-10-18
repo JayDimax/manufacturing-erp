@@ -42,4 +42,3 @@ class GoodsReceiptPolicy
         return $user->can('goods-receipt-cancel');
     }
 }
-

@@ -32,4 +32,3 @@ class ProductCategoryPolicy
         return $user->can('product-category-delete');
     }
 }
-

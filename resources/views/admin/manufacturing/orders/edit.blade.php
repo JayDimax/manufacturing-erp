@@ -22,7 +22,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <x-input label="Planned Quantity" name="planned_quantity" id="planned_quantity" type="number" step="0.0001" :required="true" value="{{ old('planned_quantity', $manufacturingOrder->planned_quantity) }}" />
-                <x-input label="UOM ID" name="uom_id" id="uom_id" type="number" :required="true" value="{{ old('uom_id', $manufacturingOrder->uom_id) }}" />
+                <x-select label="UOM" name="uom_id" id="uom_id" :required="true" :options="$uoms->pluck('uom_name', 'id')->toArray()" :selected="old('uom_id', $manufacturingOrder->uom_id)" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">

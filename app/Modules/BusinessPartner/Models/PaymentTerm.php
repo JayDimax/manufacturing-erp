@@ -34,7 +34,7 @@ class PaymentTerm extends Model
         parent::boot();
         static::creating(function (PaymentTerm $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -48,4 +48,3 @@ class PaymentTerm extends Model
         return $this->hasMany(BusinessPartner::class, 'payment_term_id');
     }
 }
-

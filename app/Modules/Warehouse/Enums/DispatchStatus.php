@@ -10,4 +10,3 @@ enum DispatchStatus: string
     case Dispatched = 'dispatched';
     case Cancelled = 'cancelled';
 }
-

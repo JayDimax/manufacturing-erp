@@ -26,4 +26,3 @@ class StorePackingListRequest extends FormRequest
         ];
     }
 }
-

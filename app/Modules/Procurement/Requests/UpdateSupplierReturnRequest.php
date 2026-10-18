@@ -14,7 +14,7 @@ class UpdateSupplierReturnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'supplier_return_number' => 'nullable|string|max:50|unique:supplier_returns,supplier_return_number,' . $this->route('supplier_return')?->id,
+            'supplier_return_number' => 'nullable|string|max:50|unique:supplier_returns,supplier_return_number,'.$this->route('supplier_return')?->id,
             'goods_receipt_id' => 'required|exists:goods_receipts,id',
             'return_date' => 'required|date',
             'warehouse_id' => 'required|exists:warehouses,id',
@@ -24,4 +24,3 @@ class UpdateSupplierReturnRequest extends FormRequest
         ];
     }
 }
-

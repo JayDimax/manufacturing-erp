@@ -3,14 +3,14 @@
 namespace Modules\Warehouse\Controllers;
 
 use App\Http\Controllers\Controller;
-use Modules\Warehouse\Services\PutawayService;
-use Modules\ProductMaster\Services\ProductService;
-use Modules\Administration\Services\WarehouseService;
-use Modules\Warehouse\Repositories\StorageLocationRepository;
-use Modules\Warehouse\Requests\StorePutawayRequest;
-use Modules\Warehouse\Models\Putaway;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Modules\Administration\Services\WarehouseService;
+use Modules\ProductMaster\Services\ProductService;
+use Modules\Warehouse\Models\Putaway;
+use Modules\Warehouse\Repositories\StorageLocationRepository;
+use Modules\Warehouse\Requests\StorePutawayRequest;
+use Modules\Warehouse\Services\PutawayService;
 
 class PutawayController extends Controller
 {
@@ -26,6 +26,7 @@ class PutawayController extends Controller
         $putaways = $this->warehouseService->getAll();
         // Override to use putaway pagination
         $putaways = $this->putawayService->getPaginated();
+
         return view('admin.warehouse.putaway.index', compact('putaways'));
     }
 
@@ -34,12 +35,14 @@ class PutawayController extends Controller
         $products = $this->productService->getAll();
         $warehouses = $this->warehouseService->getAll();
         $locations = [];
+
         return view('admin.warehouse.putaway.create', compact('products', 'warehouses', 'locations'));
     }
 
     public function store(StorePutawayRequest $request): RedirectResponse
     {
         $this->putawayService->create($request->validated());
+
         return redirect()->route('admin.warehouse.putaway.index')
             ->with('success', 'Put-away created successfully.');
     }
@@ -47,12 +50,14 @@ class PutawayController extends Controller
     public function show(Putaway $putaway): View
     {
         $putaway->load(['warehouse', 'storageLocation', 'product']);
+
         return view('admin.warehouse.putaway.show', compact('putaway'));
     }
 
     public function complete(Putaway $putaway): RedirectResponse
     {
         $this->putawayService->complete($putaway);
+
         return redirect()->route('admin.warehouse.putaway.index')
             ->with('success', 'Put-away completed successfully.');
     }
@@ -60,6 +65,7 @@ class PutawayController extends Controller
     public function cancel(Putaway $putaway): RedirectResponse
     {
         $this->putawayService->cancel($putaway);
+
         return redirect()->route('admin.warehouse.putaway.index')
             ->with('success', 'Put-away cancelled.');
     }
@@ -67,7 +73,7 @@ class PutawayController extends Controller
     public function getLocationsByWarehouse(int $warehouseId)
     {
         $locations = $this->locationRepository->findByWarehouse($warehouseId);
+
         return response()->json($locations);
     }
 }
-

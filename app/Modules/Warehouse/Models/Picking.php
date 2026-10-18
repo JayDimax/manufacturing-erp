@@ -2,9 +2,11 @@
 
 namespace Modules\Warehouse\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class Picking extends Model
 {
@@ -30,7 +32,7 @@ class Picking extends Model
         parent::boot();
         static::creating(function (Picking $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -41,7 +43,7 @@ class Picking extends Model
 
     public function warehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class);
+        return $this->belongsTo(Warehouse::class);
     }
 
     public function reference()
@@ -56,7 +58,6 @@ class Picking extends Model
 
     public function assignedTo()
     {
-        return $this->belongsTo(\App\Models\User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 }
-

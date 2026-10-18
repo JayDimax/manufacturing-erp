@@ -17,4 +17,3 @@ class InventoryTransferItemRepository extends BaseRepository
         return $this->model->where('inventory_transfer_id', $transferId)->get();
     }
 }
-

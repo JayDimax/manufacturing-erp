@@ -40,4 +40,3 @@ class ExportOrderRepository extends BaseRepository
             ->get();
     }
 }
-

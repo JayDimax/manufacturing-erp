@@ -4,10 +4,10 @@ namespace Modules\Sales\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
-use Modules\Sales\Models\ExportOrder;
-use Modules\Sales\Repositories\ExportOrderRepository;
-use Modules\Sales\Repositories\ExportOrderItemRepository;
 use Modules\Sales\Enums\ExportOrderStatus;
+use Modules\Sales\Models\ExportOrder;
+use Modules\Sales\Repositories\ExportOrderItemRepository;
+use Modules\Sales\Repositories\ExportOrderRepository;
 
 class ExportOrderService
 {
@@ -25,10 +25,10 @@ class ExportOrderService
 
     public function create(array $data): ExportOrder
     {
-        if (!isset($data['export_order_number'])) {
+        if (! isset($data['export_order_number'])) {
             $data['export_order_number'] = $this->numberSeriesService->generateNext('ExportOrder');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = ExportOrderStatus::Draft->value;
         }
 
@@ -37,7 +37,7 @@ class ExportOrderService
 
         $exportOrder = $this->exportOrderRepository->create($data);
 
-        if (!empty($items)) {
+        if (! empty($items)) {
             foreach ($items as $item) {
                 $item['export_order_id'] = $exportOrder->id;
                 $this->exportOrderItemRepository->create($item);
@@ -45,6 +45,7 @@ class ExportOrderService
         }
 
         $this->auditService->logCreate('sales', $exportOrder->export_order_number, $data);
+
         return $exportOrder;
     }
 
@@ -67,12 +68,14 @@ class ExportOrderService
         if ($result) {
             $this->auditService->logUpdate('sales', $exportOrder->export_order_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(ExportOrder $exportOrder): bool
     {
         $this->auditService->logDelete('sales', $exportOrder->export_order_number, $exportOrder->toArray());
+
         return $this->exportOrderRepository->delete($exportOrder);
     }
 
@@ -85,12 +88,14 @@ class ExportOrderService
         if ($result) {
             $this->auditService->logApprove('sales', $exportOrder->export_order_number);
         }
+
         return $result;
     }
 
     public function markLoaded(ExportOrder $exportOrder): bool
     {
         $exportOrder->status = ExportOrderStatus::Loaded->value;
+
         return $exportOrder->save();
     }
 
@@ -98,12 +103,14 @@ class ExportOrderService
     {
         $exportOrder->status = ExportOrderStatus::Dispatched->value;
         $exportOrder->shipped_at = now();
+
         return $exportOrder->save();
     }
 
     public function markInTransit(ExportOrder $exportOrder): bool
     {
         $exportOrder->status = ExportOrderStatus::InTransit->value;
+
         return $exportOrder->save();
     }
 
@@ -115,6 +122,7 @@ class ExportOrderService
         if ($result) {
             $this->auditService->log('delivered', 'sales', $exportOrder->export_order_number);
         }
+
         return $result;
     }
 
@@ -125,7 +133,7 @@ class ExportOrderService
         if ($result) {
             $this->auditService->logCancel('sales', $exportOrder->export_order_number);
         }
+
         return $result;
     }
 }
-

@@ -2,9 +2,11 @@
 
 namespace Modules\Sales\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\BusinessPartner\Models\BusinessPartner;
 
 class ExportOrder extends Model
 {
@@ -36,7 +38,7 @@ class ExportOrder extends Model
         parent::boot();
         static::creating(function (ExportOrder $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -52,12 +54,12 @@ class ExportOrder extends Model
 
     public function customer()
     {
-        return $this->belongsTo(\Modules\BusinessPartner\Models\BusinessPartner::class, 'customer_id');
+        return $this->belongsTo(BusinessPartner::class, 'customer_id');
     }
 
     public function approver()
     {
-        return $this->belongsTo(\App\Models\User::class, 'approved_by');
+        return $this->belongsTo(User::class, 'approved_by');
     }
 
     public function packingLists()
@@ -70,4 +72,3 @@ class ExportOrder extends Model
         return $this->hasMany(CommercialInvoice::class);
     }
 }
-

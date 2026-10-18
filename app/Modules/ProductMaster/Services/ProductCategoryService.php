@@ -30,9 +30,10 @@ class ProductCategoryService
 
     public function create(array $data): ProductCategory
     {
-        if (!isset($data['category_code'])) {
+        if (! isset($data['category_code'])) {
             $data['category_code'] = $this->numberSeriesService->generateNext('CAT');
         }
+
         return $this->categoryRepository->create($data);
     }
 
@@ -51,4 +52,3 @@ class ProductCategoryService
         return $this->categoryRepository->findActive();
     }
 }
-

@@ -4,11 +4,10 @@ namespace Modules\Inventory\Services;
 
 use App\Services\AuditService;
 use App\Services\NumberSeriesService;
-use Modules\Inventory\Models\InventoryAdjustment;
-use Modules\Inventory\Repositories\InventoryAdjustmentRepository;
-use Modules\Inventory\Repositories\InventoryAdjustmentItemRepository;
 use Modules\Inventory\Enums\InventoryAdjustmentStatus;
-use Modules\Inventory\Services\InventoryService;
+use Modules\Inventory\Models\InventoryAdjustment;
+use Modules\Inventory\Repositories\InventoryAdjustmentItemRepository;
+use Modules\Inventory\Repositories\InventoryAdjustmentRepository;
 
 class InventoryAdjustmentService
 {
@@ -32,10 +31,10 @@ class InventoryAdjustmentService
 
     public function create(array $data): InventoryAdjustment
     {
-        if (!isset($data['adjustment_number'])) {
+        if (! isset($data['adjustment_number'])) {
             $data['adjustment_number'] = $this->numberSeriesService->generateNext('INVENTORY_ADJUSTMENT');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = InventoryAdjustmentStatus::Draft->value;
         }
 
@@ -45,6 +44,9 @@ class InventoryAdjustmentService
         if (isset($data['items']) && is_array($data['items'])) {
             foreach ($data['items'] as $item) {
                 $item['inventory_adjustment_id'] = $adjustment->id;
+                if (! isset($item['difference'])) {
+                    $item['difference'] = ($item['actual_quantity'] ?? 0) - ($item['expected_quantity'] ?? 0);
+                }
                 $this->adjustmentItemRepository->create($item);
             }
         }
@@ -69,6 +71,7 @@ class InventoryAdjustmentService
     public function delete(InventoryAdjustment $adjustment): bool
     {
         $this->auditService->logDelete('inventory', $adjustment->adjustment_number, $adjustment->toArray());
+
         return $this->adjustmentRepository->delete($adjustment);
     }
 

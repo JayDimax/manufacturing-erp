@@ -32,7 +32,7 @@ class Department extends Model
         parent::boot();
         static::creating(function (Department $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -41,4 +41,3 @@ class Department extends Model
         });
     }
 }
-

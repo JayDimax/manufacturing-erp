@@ -14,8 +14,9 @@ class UpdateSalesOrderRequest extends FormRequest
     public function rules(): array
     {
         $id = $this->route('sales_order')?->id ?? 'null';
+
         return [
-            'sales_order_number' => 'nullable|string|max:50|unique:sales_orders,sales_order_number,' . $id,
+            'sales_order_number' => 'nullable|string|max:50|unique:sales_orders,sales_order_number,'.$id,
             'customer_id' => 'required|exists:business_partners,id',
             'order_date' => 'nullable|date',
             'delivery_date' => 'nullable|date|after_or_equal:order_date',
@@ -28,4 +29,3 @@ class UpdateSalesOrderRequest extends FormRequest
         ];
     }
 }
-

@@ -15,7 +15,7 @@ class StoreAccountMappingRequest extends FormRequest
     {
         return [
             'mapping_type' => 'required|string|max:50',
-            'source_type' => 'required|string|max:50',
+            'source_type' => 'nullable|string|max:50',
             'account_code' => 'required|string|max:50',
             'account_name' => 'required|string|max:200',
             'direction' => 'required|string|in:debit,credit',

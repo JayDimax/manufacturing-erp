@@ -16,7 +16,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                 <x-select label="Product" name="product_id" id="product_id" :required="true" :options="$products->pluck('product_name', 'id')->toArray()" :selected="old('product_id')" />
-                <x-select label="UOM" name="uom_id" id="uom_id" :required="true" :options="$products->first()?->defaultUom ? [$products->first()->default_uom_id => $products->first()->defaultUom->uom_code] : []" :selected="old('uom_id')" />
+                <x-select label="UOM" name="uom_id" id="uom_id" :required="true" :options="$uoms->pluck('uom_name', 'id')->toArray()" :selected="old('uom_id')" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -51,6 +51,9 @@
                                 <label class="block text-xs font-medium text-gray-700 mb-1">UOM *</label>
                                 <select name="items[0][uom_id]" class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" required>
                                     <option value="">Select UOM</option>
+                                    @foreach($uoms as $uom)
+                                        <option value="{{ $uom->id }}">{{ $uom->uom_name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div>
@@ -99,6 +102,9 @@ function addBomItem() {
                     <label class="block text-xs font-medium text-gray-700 mb-1">UOM *</label>
                     <select name="items[${itemIndex}][uom_id]" class="block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" required>
                         <option value="">Select UOM</option>
+                        @foreach($uoms as $uom)
+                            <option value="{{ $uom->id }}">{{ $uom->uom_name }}</option>
+                        @endforeach
                     </select>
                 </div>
                 <div>

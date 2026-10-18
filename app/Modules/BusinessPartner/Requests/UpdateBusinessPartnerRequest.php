@@ -14,9 +14,10 @@ class UpdateBusinessPartnerRequest extends FormRequest
     public function rules(): array
     {
         $businessPartner = $this->route('business_partner');
+
         return [
             'partner_name' => 'required|string|max:255',
-            'partner_code' => 'nullable|string|max:50|unique:business_partners,partner_code,' . $businessPartner,
+            'partner_code' => 'nullable|string|max:50|unique:business_partners,partner_code,'.$businessPartner,
             'partner_type' => 'required|string|max:50|in:supplier,customer,freight_forwarder,customs_broker,service_provider',
             'tax_identification_number' => 'nullable|string|max:100',
             'address' => 'nullable|string|max:2000',
@@ -30,4 +31,3 @@ class UpdateBusinessPartnerRequest extends FormRequest
         ];
     }
 }
-

@@ -5,6 +5,7 @@ namespace Modules\Inventory\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
+use Modules\Administration\Models\Warehouse;
 
 class InventoryTransfer extends Model
 {
@@ -34,7 +35,7 @@ class InventoryTransfer extends Model
         parent::boot();
         static::creating(function (InventoryTransfer $model) {
             $model->uuid = (string) Str::uuid();
-            if (!$model->created_by) {
+            if (! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -45,12 +46,12 @@ class InventoryTransfer extends Model
 
     public function fromWarehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class, 'from_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'from_warehouse_id');
     }
 
     public function toWarehouse()
     {
-        return $this->belongsTo(\Modules\Administration\Models\Warehouse::class, 'to_warehouse_id');
+        return $this->belongsTo(Warehouse::class, 'to_warehouse_id');
     }
 
     public function items()
@@ -58,4 +59,3 @@ class InventoryTransfer extends Model
         return $this->hasMany(InventoryTransferItem::class);
     }
 }
-

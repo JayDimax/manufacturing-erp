@@ -22,15 +22,22 @@ class PutawayService
 
     public function create(array $data): Putaway
     {
-        if (!isset($data['putaway_number'])) {
+        if (! isset($data['putaway_number'])) {
             $data['putaway_number'] = $this->numberSeriesService->generateNext('PUTAWAY');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = 'pending';
+        }
+        if (empty($data['source_type'])) {
+            $data['source_type'] = $data['reference_type'] ?? 'goods_receipt';
+        }
+        if (! isset($data['source_id'])) {
+            $data['source_id'] = 0;
         }
 
         $putaway = $this->putawayRepository->create($data);
         $this->auditService->logCreate('warehouse', $putaway->putaway_number, $data);
+
         return $putaway;
     }
 
@@ -41,12 +48,14 @@ class PutawayService
         if ($result) {
             $this->auditService->logUpdate('warehouse', $putaway->putaway_number, $old, $data);
         }
+
         return $result;
     }
 
     public function delete(Putaway $putaway): bool
     {
         $this->auditService->logDelete('warehouse', $putaway->putaway_number, $putaway->toArray());
+
         return $this->putawayRepository->delete($putaway);
     }
 
@@ -57,6 +66,7 @@ class PutawayService
         if ($result) {
             $this->auditService->logComplete('warehouse', $putaway->putaway_number);
         }
+
         return $result;
     }
 
@@ -67,7 +77,7 @@ class PutawayService
         if ($result) {
             $this->auditService->logCancel('warehouse', $putaway->putaway_number);
         }
+
         return $result;
     }
 }
-

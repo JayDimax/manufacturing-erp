@@ -120,4 +120,3 @@ class AuditService
         return $this->log('logout', 'Authentication', null, null, null, 'User logged out', $userId);
     }
 }
-

@@ -20,8 +20,8 @@ class StorePutawayRequest extends FormRequest
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|numeric|min:0',
             'batch_number' => 'nullable|string|max:100',
-            'source_type' => 'required|string|max:50',
-            'source_id' => 'required|integer',
+            'source_type' => 'nullable|string|max:50',
+            'source_id' => 'nullable|integer',
             'reference_type' => 'nullable|string|max:50',
             'reference_number' => 'nullable|string|max:50',
             'putaway_date' => 'required|date',
@@ -29,4 +29,3 @@ class StorePutawayRequest extends FormRequest
         ];
     }
 }
-

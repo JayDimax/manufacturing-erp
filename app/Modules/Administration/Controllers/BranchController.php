@@ -3,12 +3,12 @@
 namespace Modules\Administration\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 use Modules\Administration\Models\Branch;
 use Modules\Administration\Requests\StoreBranchRequest;
 use Modules\Administration\Requests\UpdateBranchRequest;
 use Modules\Administration\Services\BranchService;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\View\View;
 
 class BranchController extends Controller
 {
@@ -19,6 +19,7 @@ class BranchController extends Controller
     public function index(): View
     {
         $branches = $this->branchService->getPaginated();
+
         return view('admin.branches.index', compact('branches'));
     }
 
@@ -30,6 +31,7 @@ class BranchController extends Controller
     public function store(StoreBranchRequest $request): RedirectResponse
     {
         $this->branchService->create($request->validated());
+
         return redirect()->route('admin.branches.index')
             ->with('success', 'Branch created successfully.');
     }
@@ -47,6 +49,7 @@ class BranchController extends Controller
     public function update(UpdateBranchRequest $request, Branch $branch): RedirectResponse
     {
         $this->branchService->update($branch, $request->validated());
+
         return redirect()->route('admin.branches.index')
             ->with('success', 'Branch updated successfully.');
     }
@@ -54,8 +57,8 @@ class BranchController extends Controller
     public function destroy(Branch $branch): RedirectResponse
     {
         $this->branchService->delete($branch);
+
         return redirect()->route('admin.branches.index')
             ->with('success', 'Branch deleted successfully.');
     }
 }
-

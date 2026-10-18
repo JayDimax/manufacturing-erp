@@ -27,4 +27,3 @@ class InventoryTransferRepository extends BaseRepository
         return $this->model->where('to_warehouse_id', $warehouseId)->orderBy('created_at', 'desc')->get();
     }
 }
-

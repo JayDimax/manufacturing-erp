@@ -28,10 +28,10 @@ class CorrectiveActionService
 
     public function create(array $data): CorrectiveAction
     {
-        if (!isset($data['action_number'])) {
+        if (! isset($data['action_number'])) {
             $data['action_number'] = $this->numberSeriesService->generateNext('CORRECTIVE_ACTION');
         }
-        if (!isset($data['status'])) {
+        if (! isset($data['status'])) {
             $data['status'] = CorrectiveActionStatus::Open->value;
         }
 
@@ -56,6 +56,7 @@ class CorrectiveActionService
     public function delete(CorrectiveAction $ca): bool
     {
         $this->auditService->logDelete('corrective_action', $ca->action_number, $ca->toArray());
+
         return $this->caRepository->delete($ca);
     }
 
@@ -115,4 +116,3 @@ class CorrectiveActionService
         return $this->caRepository->findByInspection($inspectionId);
     }
 }
-

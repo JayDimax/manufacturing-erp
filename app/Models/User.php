@@ -15,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable, HasRoles, SoftDeletes;
+    use HasFactory, HasRoles, Notifiable, SoftDeletes;
 
     protected $fillable = [
         'uuid',
@@ -53,7 +53,7 @@ class User extends Authenticatable
         parent::boot();
         static::creating(function (User $model) {
             $model->uuid = (string) Str::uuid();
-            if (auth()->check() && !$model->created_by) {
+            if (auth()->check() && ! $model->created_by) {
                 $model->created_by = auth()->id();
             }
         });
@@ -74,4 +74,3 @@ class User extends Authenticatable
         return $this->belongsTo(Department::class);
     }
 }
-

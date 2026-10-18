@@ -30,4 +30,3 @@ class StoreQualityInspectionRequest extends FormRequest
         ];
     }
 }
-

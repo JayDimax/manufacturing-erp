@@ -27,4 +27,3 @@ class PurchaseRequestRepository extends BaseRepository
         return $this->model->where('status', 'submitted')->get();
     }
 }
-

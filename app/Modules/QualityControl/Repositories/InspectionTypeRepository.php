@@ -27,4 +27,3 @@ class InspectionTypeRepository extends BaseRepository
             ->get();
     }
 }
-

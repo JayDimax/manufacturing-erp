@@ -27,4 +27,3 @@ class StoreNonConformanceRequest extends FormRequest
         ];
     }
 }
-
