@@ -24,7 +24,7 @@ class StoreGoodsReceiptRequest extends FormRequest
             'status' => 'nullable|string|in:draft,completed,cancelled',
             'remarks' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
-            'items.*.purchase_order_item_id' => 'required|exists:purchase_order_items,id',
+            'items.*.purchase_order_item_id' => 'nullable|exists:purchase_order_items,id',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.uom_id' => 'required|exists:units_of_measure,id',
             'items.*.quantity_ordered' => 'required|numeric|min:0',

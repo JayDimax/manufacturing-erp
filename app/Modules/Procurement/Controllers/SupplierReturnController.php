@@ -18,6 +18,8 @@ class SupplierReturnController extends Controller
         protected SupplierReturnService $supplierReturnService,
         protected GoodsReceiptService $goodsReceiptService,
         protected WarehouseService $warehouseService,
+        protected \Modules\ProductMaster\Services\ProductService $productService,
+        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
@@ -30,6 +32,8 @@ class SupplierReturnController extends Controller
     {
         $goodsReceipts = $this->goodsReceiptService->getPaginated();
         $warehouses = $this->warehouseService->getAll();
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
         $reasons = [
             'damaged_packaging' => 'Damaged Packaging',
             'spoiled_goods' => 'Spoiled Goods',
@@ -38,7 +42,7 @@ class SupplierReturnController extends Controller
             'failed_quality_inspection' => 'Failed Quality Inspection',
             'other' => 'Other',
         ];
-        return view('admin.supplier-returns.create', compact('goodsReceipts', 'warehouses', 'reasons'));
+        return view('admin.supplier-returns.create', compact('goodsReceipts', 'warehouses', 'reasons', 'products', 'uoms'));
     }
 
     public function store(StoreSupplierReturnRequest $request): RedirectResponse
@@ -56,6 +60,21 @@ class SupplierReturnController extends Controller
 
     public function edit(SupplierReturn $supplierReturn): View
     {
+        $goodsReceipts = $this->goodsReceiptService->getPaginated();
+        $warehouses = $this->warehouseService->getAll();
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
+        $reasons = [
+            'damaged_packaging' => 'Damaged Packaging',
+            'spoiled_goods' => 'Spoiled Goods',
+            'incorrect_quantity' => 'Incorrect Quantity',
+            'wrong_item' => 'Wrong Item',
+            'failed_quality_inspection' => 'Failed Quality Inspection',
+            'other' => 'Other',
+        ];
+        $supplierReturn->load(['items.product', 'items.uom']);
+        return view('admin.supplier-returns.edit', compact('supplierReturn', 'goodsReceipts', 'warehouses', 'reasons', 'products', 'uoms'));
+    }
         $goodsReceipts = $this->goodsReceiptService->getPaginated();
         $warehouses = $this->warehouseService->getAll();
         $reasons = [

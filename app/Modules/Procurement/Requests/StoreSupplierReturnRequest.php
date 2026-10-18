@@ -22,7 +22,7 @@ class StoreSupplierReturnRequest extends FormRequest
             'status' => 'nullable|string|in:draft,completed,cancelled',
             'remarks' => 'nullable|string|max:1000',
             'items' => 'required|array|min:1',
-            'items.*.goods_receipt_item_id' => 'required|exists:goods_receipt_items,id',
+            'items.*.goods_receipt_item_id' => 'nullable|exists:goods_receipt_items,id',
             'items.*.product_id' => 'required|exists:products,id',
             'items.*.uom_id' => 'required|exists:units_of_measure,id',
             'items.*.quantity_returned' => 'required|numeric|min:0.0001',

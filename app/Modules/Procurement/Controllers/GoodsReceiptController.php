@@ -18,6 +18,8 @@ class GoodsReceiptController extends Controller
         protected GoodsReceiptService $goodsReceiptService,
         protected PurchaseOrderService $purchaseOrderService,
         protected WarehouseService $warehouseService,
+        protected \Modules\ProductMaster\Services\ProductService $productService,
+        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
@@ -30,7 +32,9 @@ class GoodsReceiptController extends Controller
     {
         $purchaseOrders = $this->purchaseOrderService->findOpen();
         $warehouses = $this->warehouseService->getAll();
-        return view('admin.goods-receipts.create', compact('purchaseOrders', 'warehouses'));
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
+        return view('admin.goods-receipts.create', compact('purchaseOrders', 'warehouses', 'products', 'uoms'));
     }
 
     public function store(StoreGoodsReceiptRequest $request): RedirectResponse
@@ -50,7 +54,10 @@ class GoodsReceiptController extends Controller
     {
         $purchaseOrders = $this->purchaseOrderService->findOpen();
         $warehouses = $this->warehouseService->getAll();
-        return view('admin.goods-receipts.edit', compact('goodsReceipt', 'purchaseOrders', 'warehouses'));
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
+        $goodsReceipt->load(['items.product', 'items.uom']);
+        return view('admin.goods-receipts.edit', compact('goodsReceipt', 'purchaseOrders', 'warehouses', 'products', 'uoms'));
     }
 
     public function update(UpdateGoodsReceiptRequest $request, GoodsReceipt $goodsReceipt): RedirectResponse

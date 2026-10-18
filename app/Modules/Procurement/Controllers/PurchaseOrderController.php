@@ -20,6 +20,8 @@ class PurchaseOrderController extends Controller
         protected PurchaseRequestService $purchaseRequestService,
         protected BusinessPartnerService $businessPartnerService,
         protected PaymentTermService $paymentTermService,
+        protected \Modules\ProductMaster\Services\ProductService $productService,
+        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
@@ -33,7 +35,9 @@ class PurchaseOrderController extends Controller
         $purchaseRequests = $this->purchaseRequestService->getPendingApproval();
         $suppliers = $this->businessPartnerService->getSuppliers();
         $paymentTerms = $this->paymentTermService->getActiveTerms();
-        return view('admin.purchase-orders.create', compact('purchaseRequests', 'suppliers', 'paymentTerms'));
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
+        return view('admin.purchase-orders.create', compact('purchaseRequests', 'suppliers', 'paymentTerms', 'products', 'uoms'));
     }
 
     public function store(StorePurchaseOrderRequest $request): RedirectResponse
@@ -54,7 +58,10 @@ class PurchaseOrderController extends Controller
         $purchaseRequests = $this->purchaseRequestService->getPendingApproval();
         $suppliers = $this->businessPartnerService->getSuppliers();
         $paymentTerms = $this->paymentTermService->getActiveTerms();
-        return view('admin.purchase-orders.edit', compact('purchaseOrder', 'purchaseRequests', 'suppliers', 'paymentTerms'));
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
+        $purchaseOrder->load(['items.product', 'items.uom']);
+        return view('admin.purchase-orders.edit', compact('purchaseOrder', 'purchaseRequests', 'suppliers', 'paymentTerms', 'products', 'uoms'));
     }
 
     public function update(UpdatePurchaseOrderRequest $request, PurchaseOrder $purchaseOrder): RedirectResponse
