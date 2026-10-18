@@ -16,6 +16,8 @@ class PurchaseRequestController extends Controller
     public function __construct(
         protected PurchaseRequestService $purchaseRequestService,
         protected DepartmentService $departmentService,
+        protected \Modules\ProductMaster\Services\ProductService $productService,
+        protected \Modules\ProductMaster\Services\UnitOfMeasureService $uomService,
     ) {}
 
     public function index(): View
@@ -27,13 +29,15 @@ class PurchaseRequestController extends Controller
     public function create(): View
     {
         $departments = $this->departmentService->getAll();
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
         $priorities = [
             'low' => 'Low',
             'normal' => 'Normal',
             'high' => 'High',
             'urgent' => 'Urgent',
         ];
-        return view('admin.purchase-requests.create', compact('departments', 'priorities'));
+        return view('admin.purchase-requests.create', compact('departments', 'priorities', 'products', 'uoms'));
     }
 
     public function store(StorePurchaseRequestRequest $request): RedirectResponse
@@ -52,13 +56,16 @@ class PurchaseRequestController extends Controller
     public function edit(PurchaseRequest $purchaseRequest): View
     {
         $departments = $this->departmentService->getAll();
+        $products = $this->productService->getAll();
+        $uoms = $this->uomService->getAll();
         $priorities = [
             'low' => 'Low',
             'normal' => 'Normal',
             'high' => 'High',
             'urgent' => 'Urgent',
         ];
-        return view('admin.purchase-requests.edit', compact('purchaseRequest', 'departments', 'priorities'));
+        $purchaseRequest->load(['items.product', 'items.uom']);
+        return view('admin.purchase-requests.edit', compact('purchaseRequest', 'departments', 'priorities', 'products', 'uoms'));
     }
 
     public function update(UpdatePurchaseRequestRequest $request, PurchaseRequest $purchaseRequest): RedirectResponse

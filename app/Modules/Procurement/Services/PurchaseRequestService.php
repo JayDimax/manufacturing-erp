@@ -36,7 +36,15 @@ class PurchaseRequestService
             $data['status'] = 'draft';
         }
 
+        $items = $data['items'] ?? [];
+        unset($data['items']);
+
         $purchaseRequest = $this->purchaseRequestRepository->create($data);
+
+        foreach ($items as $item) {
+            $item['purchase_request_id'] = $purchaseRequest->id;
+            $this->purchaseRequestItemRepository->create($item);
+        }
 
         $this->auditService->logCreate('procurement', $purchaseRequest->request_number, $data);
 
@@ -45,8 +53,19 @@ class PurchaseRequestService
 
     public function update(PurchaseRequest $purchaseRequest, array $data): bool
     {
+        $items = $data['items'] ?? null;
+        unset($data['items']);
+
         $oldValues = $purchaseRequest->toArray();
         $result = $this->purchaseRequestRepository->update($purchaseRequest, $data);
+
+        if ($items !== null) {
+            $purchaseRequest->items()->delete();
+            foreach ($items as $item) {
+                $item['purchase_request_id'] = $purchaseRequest->id;
+                $this->purchaseRequestItemRepository->create($item);
+            }
+        }
 
         if ($result) {
             $this->auditService->logUpdate('procurement', $purchaseRequest->request_number, $oldValues, $data);

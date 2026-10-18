@@ -36,7 +36,18 @@ class PurchaseOrderService
             $data['status'] = 'draft';
         }
 
+        $items = $data['items'] ?? [];
+        unset($data['items']);
+
         $purchaseOrder = $this->purchaseOrderRepository->create($data);
+
+        foreach ($items as $item) {
+            $item['purchase_order_id'] = $purchaseOrder->id;
+            if (!isset($item['total_cost'])) {
+                $item['total_cost'] = ($item['quantity_ordered'] ?? 0) * ($item['unit_cost'] ?? 0);
+            }
+            $this->purchaseOrderItemRepository->create($item);
+        }
 
         $this->auditService->logCreate('procurement', $purchaseOrder->purchase_order_number, $data);
 
@@ -45,8 +56,22 @@ class PurchaseOrderService
 
     public function update(PurchaseOrder $purchaseOrder, array $data): bool
     {
+        $items = $data['items'] ?? null;
+        unset($data['items']);
+
         $oldValues = $purchaseOrder->toArray();
         $result = $this->purchaseOrderRepository->update($purchaseOrder, $data);
+
+        if ($items !== null) {
+            $purchaseOrder->items()->delete();
+            foreach ($items as $item) {
+                $item['purchase_order_id'] = $purchaseOrder->id;
+                if (!isset($item['total_cost'])) {
+                    $item['total_cost'] = ($item['quantity_ordered'] ?? 0) * ($item['unit_cost'] ?? 0);
+                }
+                $this->purchaseOrderItemRepository->create($item);
+            }
+        }
 
         if ($result) {
             $this->auditService->logUpdate('procurement', $purchaseOrder->purchase_order_number, $oldValues, $data);

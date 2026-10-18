@@ -33,29 +33,42 @@ class CompanyController extends Controller
             ->with('success', 'Company created successfully.');
     }
 
-    public function edit(int $id): View
+    public function edit(?int $id = null): View
     {
-        $company = $this->companyService->findById($id);
-        abort_if(!$company, 404);
+        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: \Modules\Administration\Models\Company::first());
         return view('admin.company.edit', compact('company'));
     }
 
-    public function update(Request $request, int $id): RedirectResponse
+    public function update(Request $request, ?int $id = null): RedirectResponse
     {
-        $company = $this->companyService->findById($id);
-        abort_if(!$company, 404);
+        $company = $id ? $this->companyService->findById($id) : ($this->companyService->getActive() ?: \Modules\Administration\Models\Company::first());
 
-        $this->companyService->update($company, $request->validate([
+        $validated = $request->validate([
             'company_name' => 'required|string|max:255',
             'logo_path' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:1000',
             'contact_email' => 'nullable|email|max:255',
+            'email' => 'nullable|email|max:255',
             'contact_phone' => 'nullable|string|max:50',
+            'phone' => 'nullable|string|max:50',
             'tin' => 'nullable|string|max:50',
             'registration_number' => 'nullable|string|max:50',
             'default_currency' => 'nullable|string|size:3',
             'timezone' => 'nullable|string|max:100',
-        ]));
+        ]);
+
+        if (isset($validated['email']) && !isset($validated['contact_email'])) {
+            $validated['contact_email'] = $validated['email'];
+        }
+        if (isset($validated['phone']) && !isset($validated['contact_phone'])) {
+            $validated['contact_phone'] = $validated['phone'];
+        }
+
+        if (!$company) {
+            $this->companyService->create($validated);
+        } else {
+            $this->companyService->update($company, $validated);
+        }
 
         return redirect()->route('admin.company.index')
             ->with('success', 'Company updated successfully.');

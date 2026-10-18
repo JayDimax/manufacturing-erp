@@ -36,7 +36,15 @@ class SupplierReturnService
             $data['status'] = 'draft';
         }
 
+        $items = $data['items'] ?? [];
+        unset($data['items']);
+
         $supplierReturn = $this->supplierReturnRepository->create($data);
+
+        foreach ($items as $item) {
+            $item['supplier_return_id'] = $supplierReturn->id;
+            $this->supplierReturnItemRepository->create($item);
+        }
 
         $this->auditService->logCreate('procurement', $supplierReturn->supplier_return_number, $data);
 
@@ -45,8 +53,19 @@ class SupplierReturnService
 
     public function update(SupplierReturn $supplierReturn, array $data): bool
     {
+        $items = $data['items'] ?? null;
+        unset($data['items']);
+
         $oldValues = $supplierReturn->toArray();
         $result = $this->supplierReturnRepository->update($supplierReturn, $data);
+
+        if ($items !== null) {
+            $supplierReturn->items()->delete();
+            foreach ($items as $item) {
+                $item['supplier_return_id'] = $supplierReturn->id;
+                $this->supplierReturnItemRepository->create($item);
+            }
+        }
 
         if ($result) {
             $this->auditService->logUpdate('procurement', $supplierReturn->supplier_return_number, $oldValues, $data);

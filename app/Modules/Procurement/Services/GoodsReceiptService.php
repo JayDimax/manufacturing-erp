@@ -36,7 +36,15 @@ class GoodsReceiptService
             $data['status'] = 'draft';
         }
 
+        $items = $data['items'] ?? [];
+        unset($data['items']);
+
         $goodsReceipt = $this->goodsReceiptRepository->create($data);
+
+        foreach ($items as $item) {
+            $item['goods_receipt_id'] = $goodsReceipt->id;
+            $this->goodsReceiptItemRepository->create($item);
+        }
 
         $this->auditService->logCreate('procurement', $goodsReceipt->goods_receipt_number, $data);
 
@@ -45,8 +53,19 @@ class GoodsReceiptService
 
     public function update(GoodsReceipt $goodsReceipt, array $data): bool
     {
+        $items = $data['items'] ?? null;
+        unset($data['items']);
+
         $oldValues = $goodsReceipt->toArray();
         $result = $this->goodsReceiptRepository->update($goodsReceipt, $data);
+
+        if ($items !== null) {
+            $goodsReceipt->items()->delete();
+            foreach ($items as $item) {
+                $item['goods_receipt_id'] = $goodsReceipt->id;
+                $this->goodsReceiptItemRepository->create($item);
+            }
+        }
 
         if ($result) {
             $this->auditService->logUpdate('procurement', $goodsReceipt->goods_receipt_number, $oldValues, $data);
