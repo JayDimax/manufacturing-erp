@@ -1,130 +1,254 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Banana Chips Manufacturing System') }} | Sign In</title>
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700,800&display=swap" rel="stylesheet" />
-    @vite(['resources/css/app.css'])
-</head>
-<body class="min-h-screen bg-[#06291f] text-white">
-    <main class="relative flex min-h-screen items-center justify-center overflow-hidden p-5">
-        <!-- Background gradients -->
-        <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 15% 20%, #34d399 0, transparent 28%), radial-gradient(circle at 85% 80%, #0d9488 0, transparent 30%);"></div>
 
-        <div class="relative grid w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl shadow-black/30 lg:grid-cols-[1.05fr_1fr]">
-            <!-- Left panel - Branding -->
-            <section class="hidden flex-col justify-between bg-gradient-to-br from-emerald-900 to-teal-800 p-12 text-white lg:flex">
-                <div class="flex items-center gap-3">
-                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-300 text-emerald-950">
-                        <svg class="w-[22px] h-[22px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+    <title>{{ config('app.name', 'Banana Chips Manufacturing System') }} | Sign In</title>
+
+    <!-- Mantis Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><path fill='%231677ff' d='M20 2L4 11v18l16 9 16-9V11L20 2zm0 4.5l11.5 6.5-4.5 2.5-11.5-6.5L20 6.5zm-12 8.3l10.5 5.9v12.2L8 26.9V14.8zm14 18.1V20.7l10.5-5.9v12.1L22 32.9z'/></svg>" />
+
+    <!-- Google Fonts: Public Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="min-h-screen bg-[#fafafb] text-[#262626] font-sans antialiased flex items-center justify-center p-4 sm:p-6 lg:p-8 selection:bg-[#1677ff] selection:text-white">
+    <!-- Subtle Background Grid & Glow -->
+    <div class="fixed inset-0 pointer-events-none opacity-60" style="background-image: radial-gradient(#1677ff 0.75px, transparent 0.75px), radial-gradient(circle at 10% 10%, rgba(22, 119, 255, 0.05) 0, transparent 40%), radial-gradient(circle at 90% 85%, rgba(64, 150, 255, 0.04) 0, transparent 40%); background-size: 24px 24px, 100% 100%, 100% 100%;"></div>
+
+    <main class="relative z-10 w-full max-w-5xl">
+        <div class="relative grid overflow-hidden rounded-2xl border border-[#f0f0f0] bg-white shadow-mantis-dropdown lg:grid-cols-[1.05fr_1fr]">
+            <!-- Left Panel - Mantis Executive Branding -->
+            <section class="relative hidden flex-col justify-between overflow-hidden bg-gradient-to-br from-[#001d66] via-[#0958d9] to-[#1677ff] p-10 lg:flex lg:p-12 text-white">
+                <!-- Background decorative shapes -->
+                <div class="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+                <div class="absolute -left-16 -bottom-16 h-64 w-64 rounded-full bg-[#1677ff]/30 blur-2xl pointer-events-none"></div>
+                <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 20px 20px;"></div>
+
+                <!-- Brand Header -->
+                <div class="relative z-10 flex items-center gap-3">
+                    <span class="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15 backdrop-blur-md border border-white/20 text-white shadow-sm">
+                        <svg class="w-6 h-6" viewBox="0 0 40 40" fill="none">
+                            <path fill="currentColor" d="M20 2L4 11v18l16 9 16-9V11L20 2zm0 4.5l11.5 6.5-4.5 2.5-11.5-6.5L20 6.5zm-12 8.3l10.5 5.9v12.2L8 26.9V14.8zm14 18.1V20.7l10.5-5.9v12.1L22 32.9z"/>
                         </svg>
                     </span>
                     <div>
-                        <p class="font-headline text-lg font-bold">{{ config('app.name', 'Banana Chips Manufacturing System') }}</p>
-                        <p class="text-[10px] uppercase tracking-[0.2em] text-emerald-200">Banana Chips Manufacturing System</p>
+                        <p class="font-headline text-base font-bold text-white leading-tight flex items-center gap-2">
+                            {{ config('app.name', 'Banana Chips Manufacturing System') }}
+                            <span class="rounded bg-white/20 px-1.5 py-0.5 text-[10px] font-semibold text-white backdrop-blur-sm">ERP</span>
+                        </p>
+                        <p class="text-[11px] font-medium tracking-wide text-blue-100/80">Enterprise Resource Planning</p>
                     </div>
                 </div>
 
-                <div>
-                    <h1 class="max-w-sm font-headline text-4xl font-bold leading-tight">Your manufacturing, securely connected.</h1>
-                    <p class="mt-4 max-w-sm text-sm leading-7 text-emerald-100/80">One protected workspace for procurement, inventory, production, quality control, and operations.</p>
+                <!-- Center Pitch -->
+                <div class="relative z-10 my-8">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white backdrop-blur-sm border border-white/20">
+                        <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                        High-Performance Manufacturing ERP
+                    </span>
+                    <h1 class="mt-4 font-headline text-3xl font-bold leading-tight text-white lg:text-4xl">
+                        Your manufacturing,<br />
+                        <span class="text-blue-200">securely connected.</span>
+                    </h1>
+                    <p class="mt-3 text-sm leading-relaxed text-blue-100/85">
+                        One unified workspace to govern procurement, inventory, production floor, quality assurance, warehouse logistics, and financial postings.
+                    </p>
+
+                    <div class="mt-6 space-y-2.5">
+                        <div class="flex items-center gap-2.5 text-xs text-blue-100">
+                            <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span>Granular Role-Based Access Control (RBAC)</span>
+                        </div>
+                        <div class="flex items-center gap-2.5 text-xs text-blue-100">
+                            <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span>Multi-Tier Approval Governance Workflows</span>
+                        </div>
+                        <div class="flex items-center gap-2.5 text-xs text-blue-100">
+                            <svg class="w-4 h-4 text-emerald-300 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                            </svg>
+                            <span>Full Immutable Transaction Audit Logging</span>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="flex items-center gap-2 text-xs text-emerald-100/70">
-                    <svg class="w-[16px] h-[16px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                    </svg>
-                    Role-based access &middot; Encrypted sessions &middot; Audited actions
+                <!-- Footer Trust Badges -->
+                <div class="relative z-10 flex items-center justify-between border-t border-white/15 pt-5 text-xs text-blue-100/80">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        <span>Encrypted Session Management</span>
+                    </div>
+                    <span class="font-semibold text-white">SOC 2 &middot; AES-256</span>
                 </div>
             </section>
 
-            <!-- Right panel - Login form -->
-            <section class="p-7 sm:p-12 lg:p-14">
-                <div class="mb-9 lg:hidden">
-                    <div class="flex items-center gap-3">
-                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 text-emerald-800">
-                            <svg class="w-[21px] h-[21px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                            </svg>
-                        </span>
-                        <b class="font-headline text-lg text-slate-900">{{ config('app.name', 'Banana Chips Manufacturing System') }}</b>
+            <!-- Right Panel - Mantis Login Form -->
+            <section class="flex flex-col justify-between p-8 sm:p-12 lg:p-14 bg-white">
+                <div>
+                    <!-- Mobile Logo -->
+                    <div class="mb-8 lg:hidden">
+                        <a href="{{ url('/') }}" class="flex items-center gap-3">
+                            <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-[#1677ff] text-white shadow-sm">
+                                <svg class="w-5 h-5" viewBox="0 0 40 40" fill="none">
+                                    <path fill="currentColor" d="M20 2L4 11v18l16 9 16-9V11L20 2zm0 4.5l11.5 6.5-4.5 2.5-11.5-6.5L20 6.5zm-12 8.3l10.5 5.9v12.2L8 26.9V14.8zm14 18.1V20.7l10.5-5.9v12.1L22 32.9z"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <p class="font-headline text-base font-bold text-[#141414]">{{ config('app.name', 'Banana Chips Manufacturing System') }}</p>
+                                <p class="text-[10px] uppercase tracking-wider text-[#8c8c8c]">Enterprise Resource Planning</p>
+                            </div>
+                        </a>
                     </div>
+
+                    <!-- Header -->
+                    <div>
+                        <span class="rounded bg-[#e6f4ff] px-2.5 py-1 text-xs font-semibold text-[#1677ff] border border-[#bae0ff]">Secure Authentication</span>
+                        <h2 class="mt-3 font-headline text-2xl font-bold tracking-tight text-[#141414] sm:text-3xl">Sign In</h2>
+                        <p class="mt-1 text-sm text-[#8c8c8c]">Enter your enterprise credentials to access your workspace.</p>
+                    </div>
+
+                    <!-- Session Status -->
+                    @if (session('status'))
+                        <div class="mt-4 rounded-md border border-[#b7eb8f] bg-[#f6ffed] p-3 text-xs text-[#389e0d]">
+                            {{ session('status') }}
+                        </div>
+                    @endif
+
+                    <!-- Form -->
+                    <form method="POST" action="{{ route('login') }}" class="mt-6 space-y-4">
+                        @csrf
+
+                        <!-- Email -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5" for="email">
+                                Email Address
+                            </label>
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                                    </svg>
+                                </span>
+                                <input 
+                                    id="email" 
+                                    type="email" 
+                                    name="email" 
+                                    value="{{ old('email') }}" 
+                                    required 
+                                    autofocus 
+                                    autocomplete="username"
+                                    placeholder="name@company.com" 
+                                    class="w-full rounded-md border border-[#d9d9d9] bg-white py-2.5 pl-10 pr-4 text-sm text-[#262626] placeholder-[#bfbfbf] outline-none transition focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 hover:border-[#4096ff]"
+                                />
+                            </div>
+                            @error('email')
+                                <p class="mt-1.5 text-xs font-medium text-[#cf1322]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Password -->
+                        <div x-data="{ show: false }">
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5" for="password">
+                                Password
+                            </label>
+                            <div class="relative">
+                                <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                </span>
+                                <input 
+                                    id="password" 
+                                    :type="show ? 'text' : 'password'" 
+                                    name="password" 
+                                    required 
+                                    autocomplete="current-password"
+                                    placeholder="Enter your password" 
+                                    class="w-full rounded-md border border-[#d9d9d9] bg-white py-2.5 pl-10 pr-10 text-sm text-[#262626] placeholder-[#bfbfbf] outline-none transition focus:border-[#1677ff] focus:ring-2 focus:ring-[#1677ff]/10 hover:border-[#4096ff]"
+                                />
+                                <button 
+                                    type="button" 
+                                    @click="show = !show" 
+                                    aria-label="Toggle password visibility" 
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3.5 text-slate-400 hover:text-slate-600 transition"
+                                >
+                                    <template x-if="!show">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </template>
+                                    <template x-if="show">
+                                        <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                                        </svg>
+                                    </template>
+                                </button>
+                            </div>
+                            @error('password')
+                                <p class="mt-1.5 text-xs font-medium text-[#cf1322]">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Remember Me & Forgot Password -->
+                        <div class="flex items-center justify-between pt-1">
+                            <label class="flex items-center gap-2 cursor-pointer">
+                                <input 
+                                    type="checkbox" 
+                                    name="remember" 
+                                    class="h-4 w-4 rounded border-slate-300 text-[#1677ff] focus:ring-[#1677ff]/20 transition"
+                                />
+                                <span class="text-xs font-medium text-slate-600">Keep me signed in</span>
+                            </label>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-xs font-medium text-[#1677ff] hover:text-[#4096ff] transition">
+                                    Forgot password?
+                                </a>
+                            @endif
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="pt-2">
+                            <button 
+                                type="submit" 
+                                class="inline-flex w-full items-center justify-center gap-2 rounded-md bg-[#1677ff] px-4 py-2.5 text-sm font-medium text-white shadow-[0_2px_0_rgba(5,145,255,0.15)] transition hover:bg-[#4096ff] active:bg-[#0958d9]"
+                            >
+                                <span>Sign In to Workspace</span>
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Register Link -->
+                    @if (Route::has('register'))
+                        <div class="mt-6 text-center text-xs text-[#8c8c8c]">
+                            Don't have an enterprise account?
+                            <a href="{{ route('register') }}" class="font-semibold text-[#1677ff] hover:text-[#4096ff] transition ml-1">
+                                Sign up
+                            </a>
+                        </div>
+                    @endif
                 </div>
 
-                <p class="text-xs font-bold uppercase tracking-[0.16em] text-emerald-700">Secure portal</p>
-                <h2 class="mt-2 font-headline text-3xl font-bold tracking-tight text-slate-950">Welcome back</h2>
-                <p class="mt-2 text-sm text-slate-500">Sign in with your assigned account.</p>
-
-                <form method="POST" action="{{ route('login') }}" class="mt-8 space-y-5">
-                    @csrf
-
-                    <!-- Email -->
-                    <label class="block">
-                        <span class="mb-2 block text-xs font-bold text-slate-700">Email address</span>
-                        <span class="relative block">
-                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
-                            </svg>
-                            <input type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-4 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
-                                placeholder="you@company.ph" />
-                        </span>
-                        @error('email')
-                            <p class="mt-2 text-xs font-medium text-rose-600">{{ $message }}</p>
-                        @enderror
-                    </label>
-
-                    <!-- Password -->
-                    <label class="block" x-data="{ show: false }">
-                        <span class="mb-2 block text-xs font-bold text-slate-700">Password</span>
-                        <span class="relative block">
-                            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-                            </svg>
-                            <input :type="show ? 'text' : 'password'" name="password" required autocomplete="current-password" minlength="8"
-                                class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-11 pr-11 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/10"
-                                placeholder="Enter your password" />
-                            <button type="button" @click="show = !show" aria-label="Toggle password visibility" class="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700">
-                                <template x-if="!show">
-                                    <svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                    </svg>
-                                </template>
-                                <template x-if="show">
-                                    <svg class="w-[17px] h-[17px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
-                                    </svg>
-                                </template>
-                            </button>
-                        </span>
-                        @error('password')
-                            <p class="mt-2 text-xs font-medium text-rose-600">{{ $message }}</p>
-                        @enderror
-                    </label>
-
-                    <!-- Remember me -->
-                    <div class="flex items-center justify-between">
-                        <label class="flex items-center gap-2">
-                            <input type="checkbox" name="remember" class="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-500">
-                            <span class="text-xs font-medium text-slate-600">Remember me</span>
-                        </label>
-                        @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-xs font-semibold text-emerald-700 hover:text-emerald-800">Forgot password?</a>
-                        @endif
-                    </div>
-
-                    <!-- Submit -->
-                    <button type="submit" class="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-800 py-3.5 text-sm font-bold text-white shadow-lg shadow-emerald-900/10 transition hover:bg-emerald-900">
-                        Sign in securely
-                    </button>
-                </form>
-
-                <p class="mt-8 text-center text-xs leading-relaxed text-slate-400">Having trouble signing in? Contact your system administrator.</p>
+                <!-- Footer Support Note -->
+                <p class="mt-8 text-center text-[11px] text-[#8c8c8c]">
+                    Protected by enterprise-grade encryption &middot; Need access? Contact your system administrator.
+                </p>
             </section>
         </div>
     </main>
